@@ -1,3 +1,9 @@
 .idea
 TicketMaster/cmake*
 TicketMaster/out
+
+TicketMaster/CMakeFiles
+cmake_install.cmake
+CMakeCache.txt
+TicketMaster/TicketMaster_autogen
+Makefile
