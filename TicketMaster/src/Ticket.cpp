@@ -31,7 +31,9 @@ void ticket::addMessage(std::string user, std::string message) {
     this->lastModified = newResponse.created;
 }
 
-
+std::vector<Message> ticket::getMessages() {
+    return messages;
+}
 
 TicketStatus ticket::getStatus() {
     return this->status;
@@ -48,6 +50,8 @@ TicketSeverity ticket::getSeverity() {
 void ticket::setSeverity(TicketSeverity newSeverity) {
     this->severity = newSeverity;
 }
+
+
 
 
 

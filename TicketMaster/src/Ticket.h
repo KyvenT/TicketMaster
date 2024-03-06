@@ -59,7 +59,7 @@ class ticket {
         /* Function to get all messages associated with the ticket
          * @return a std::vector<Message> of the messages
          */
-        std::vector<Message> getMessages;
+        std::vector<Message> getMessages();
 
         /* Function to get current ticket status
          * @return ticket status
