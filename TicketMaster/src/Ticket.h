@@ -43,12 +43,18 @@ class ticket {
          * @param severity the ticket's severity
          * @param department a std::string of the name of the destination department
         */
-        explicit ticket(std::string title, std::string message, TicketSeverity severity, std::string department);
+        explicit ticket(std::string title, std::string user, std::string message, TicketSeverity severity, std::string department);
 
-        /* Function to add a department representative to current ticket
+        /* Function to set a department representative to current ticket
          * @param user a weak_ptr<User> to the department representative
          */
-        // void addDeptRep(weak_ptr<User> user);
+        // void setDeptRep(weak_ptr<User> user);
+        void setDeptRep(std::string user);
+
+        /* Function to get department rep of ticket
+         * @return std::string department representative
+         */
+        std::string getDeptRep();
 
         /* Function to add response messages to ticket
          * @param user the user who created the response message
@@ -80,13 +86,43 @@ class ticket {
          * @param newSeverity the new ticket severity
          */
         void setSeverity(TicketSeverity newSeverity);
+
+        /* Function to get ticket creator user's name
+         * @return ticket creator user
+         */
+        std::string getUser();
+
+        /* Function to get ticket's destination department
+         * @return department name
+         */
+        std::string getDepartment();
     private:
+        // Ticket title
         std::string title;
+
+        // Ticket creator user
         // weak_ptr<User> user;
+        std::string user;
+
+        // Ticket destination department
         std::string department;
+
+        // Assigned department representatitive
         // weak_ptr<User> departmentRep;
+        std::string deptRep;
+
+        // Messages in ticket
         std::vector<Message> messages;
+
+        // Ticket status
         TicketStatus status;
+
+        // Ticket severity
         TicketSeverity severity;
+
+        // Ticket last modified time
         std::chrono::time_point<std::chrono::system_clock> lastModified;
+
+        // Boolean for if the ticket has an assigned department representative
+        bool hasDeptRep;
 };

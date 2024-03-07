@@ -15,6 +15,8 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 add_executable(TicketMaster src/main.cpp
         src/Ticket.h
-        src/Ticket.cpp)
+        src/Ticket.cpp
+        src/TicketManager.h
+        src/TicketManager.cpp)
 
 target_link_libraries(TicketMaster Qt5::Widgets)

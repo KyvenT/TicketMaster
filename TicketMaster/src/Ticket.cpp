@@ -11,18 +11,37 @@
  * @param severity the ticket's severity
  * @param department a std::string of the name of the destination department
 */
-ticket::ticket(std::string title, std::string message, TicketSeverity severity, std::string department) {
+ticket::ticket(std::string title, std::string user, std::string message, TicketSeverity severity, std::string department) {
     this->title = title;
     this->department = department;
     this->severity = severity;
     this->status = WaitingForDepartment;
+    this->user = user;
+    this->hasDeptRep = false;
     // convert message from std::string to Message struct
     Message firstMessage;
     firstMessage.message = message;
 
 }
 
-// void ticket::addDeptRep(weak_ptr<User> user)
+// void ticket::setDeptRep(weak_ptr<User> user)
+/* Function to set a department representative to a ticket
+ * @param user a std::string of department representative's name
+ */
+void ticket::setDeptRep(std::string user) {
+    this->deptRep = user;
+    this->hasDeptRep = true;
+    if (this->deptRep == "none") {
+        this->hasDeptRep = false;
+    }
+}
+
+std::string ticket::getDeptRep() {
+    if (this->hasDeptRep) {
+        return this->deptRep;
+    }
+    return "NO DEPARTMENT REPRESENTATIVE ASSIGNED";
+}
 
 // Adds a response message to the ticket
 void ticket::addMessage(std::string user, std::string message) {
@@ -50,6 +69,18 @@ TicketSeverity ticket::getSeverity() {
 void ticket::setSeverity(TicketSeverity newSeverity) {
     this->severity = newSeverity;
 }
+
+std::string ticket::getUser() {
+    return this->user;
+}
+
+std::string ticket::getDepartment() {
+    return this->department;
+}
+
+
+
+
 
 
 
