@@ -3,9 +3,7 @@
 //
 #include "TicketManager.h"
 
-/** Constructor
- *
- */
+// Constructor
 ticketManager::ticketManager() = default;
 
 std::vector<ticket> ticketManager::GetUserTickets(std::string user) {

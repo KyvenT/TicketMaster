@@ -3,7 +3,7 @@
 //
 #include "Ticket.h"
 
-/* Constructor
+/** Constructor
  * Needs title, creator user, destination department,
  * @param title a std::string representing title of ticket
  * @param user a weak_ptr<User> pointing to the user who created the ticket
@@ -21,11 +21,13 @@ ticket::ticket(std::string title, std::string user, std::string message, TicketS
     // convert message from std::string to Message struct
     Message firstMessage;
     firstMessage.message = message;
+    firstMessage.sender = user;
+    messages.push_back(firstMessage);
 
 }
 
 // void ticket::setDeptRep(weak_ptr<User> user)
-/* Function to set a department representative to a ticket
+/** Function to set a department representative to a ticket
  * @param user a std::string of department representative's name
  */
 void ticket::setDeptRep(std::string user) {
@@ -36,6 +38,9 @@ void ticket::setDeptRep(std::string user) {
     }
 }
 
+/** Function to return department representative of a ticket
+ * @return department representative or "NO DEPARTMENT REPRESENTATIVE ASSIGNED"
+ */
 std::string ticket::getDeptRep() {
     if (this->hasDeptRep) {
         return this->deptRep;
@@ -77,6 +82,23 @@ std::string ticket::getUser() {
 std::string ticket::getDepartment() {
     return this->department;
 }
+
+std::string ticket::getTitle() {
+    return this->title;
+}
+
+void ticket::setTitle(std::string title) {
+    this->title = title;
+}
+
+std::chrono::time_point<std::chrono::system_clock> ticket::getModifiedTime() {
+    return this->lastModified;
+}
+
+bool ticket::hasDepartmentRep() {
+    return this->hasDeptRep;
+}
+
 
 
 
