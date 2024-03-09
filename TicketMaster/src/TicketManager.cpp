@@ -1,5 +1,7 @@
 #include "TicketManager.h"
 
+std::vector<ticket> ticketManager::tickets;
+
 // Constructor
 ticketManager::ticketManager() = default;
 
