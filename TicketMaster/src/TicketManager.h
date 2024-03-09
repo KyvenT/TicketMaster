@@ -42,3 +42,4 @@ class ticketManager {
         static void CreateTicket(std::string user, std::string department, std::string title, std::string message);
 
 };
+std::vector<ticket> ticketManager::tickets;
