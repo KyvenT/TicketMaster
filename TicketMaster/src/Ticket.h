@@ -111,13 +111,16 @@ class ticket {
          */
          void setTitle(std::string title);
 
-
          /**
           * Function to get ticket's last modified time
           * @return last modified time
           */
          std::chrono::time_point<std::chrono::system_clock> getModifiedTime();
 
+         /**
+          * Function to check if ticket has been assigned a department representative
+          * @return True if ticket has a department representative, False otherwise
+          */
          bool hasDepartmentRep();
 
     private:
