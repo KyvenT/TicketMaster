@@ -32,3 +32,11 @@ void ticketManager::CreateTicket(std::string user, std::string department, std::
     tickets.push_back(newTicket);
 }
 
+void ticketManager::DeleteTicket(std::string user, std::string department, std::string title) {
+    for (int i = 0; i < tickets.size(); i++) {
+        if (tickets.at(i).getUser() == user && tickets.at(i).getDepartment() == department && tickets.at(i).getTitle() == title) {
+            tickets.erase(tickets.begin() + i);
+        }
+    }
+}
+

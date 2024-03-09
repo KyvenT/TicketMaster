@@ -41,5 +41,11 @@ class ticketManager {
          */
         static void CreateTicket(std::string user, std::string department, std::string title, std::string message);
 
+        /**
+         * Function to delete a certain ticket, given the creator user, destination department, and ticket title
+         * @param user user who created the ticket
+         * @param department destination department of the ticket
+         * @param title title of the ticket
+         */
+        static void DeleteTicket(std::string user, std::string department, std::string title);
 };
-std::vector<ticket> ticketManager::tickets;
