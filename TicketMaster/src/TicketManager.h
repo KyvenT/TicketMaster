@@ -1,11 +1,4 @@
-//
-// Created by kyven on 2024-03-06.
-//
-
-#ifndef TICKETMASTER_TICKETMANAGER_H
-#define TICKETMASTER_TICKETMANAGER_H
-
-#endif //TICKETMASTER_TICKETMANAGER_H
+#pragma
 
 #include "Ticket.h"
 #include <fstream>

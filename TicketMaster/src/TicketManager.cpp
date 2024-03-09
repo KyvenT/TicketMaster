@@ -1,6 +1,3 @@
-//
-// Created by kyven on 2024-03-06.
-//
 #include "TicketManager.h"
 
 // Constructor

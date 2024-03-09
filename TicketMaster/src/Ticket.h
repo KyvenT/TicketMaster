@@ -1,10 +1,4 @@
-//
-// Created by Kyven on 2024-03-06.
-//
-#ifndef TICKETMASTER_TICKET_H
-#define TICKETMASTER_TICKET_H
-
-#endif //TICKETMASTER_TICKET_H
+#pragma
 
 #include <string>
 #include <vector>

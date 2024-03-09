@@ -1,6 +1,3 @@
-//
-// Created by Kyven on 2024-03-06.
-//
 #include "Ticket.h"
 
 /** Constructor
