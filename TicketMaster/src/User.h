@@ -73,5 +73,5 @@ public:
 };
 
 #endif // USER_H
-are ty
+
 
