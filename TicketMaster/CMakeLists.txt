@@ -18,9 +18,15 @@ add_executable(TicketMaster src/main.cpp
         src/Ticket.h
         src/TicketManager.cpp
         src/TicketManager.h
-        src/UserManager.cpp
         src/User.cpp
         src/User.h
-        src/UserManager.h)
+        src/UserManager.cpp
+        src/UserManager.h
+        src/UserWindow.cpp
+        src/UserWindow.h
+        src/DepartmentTicketsGUI.cpp
+        src/DepartmentTicketsGUI.h
+        src/TicketGUI.cpp
+        src/TicketGUI.h )
 
 target_link_libraries(TicketMaster Qt5::Widgets)

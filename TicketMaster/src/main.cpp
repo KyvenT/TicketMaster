@@ -1,5 +1,14 @@
-#include <iostream>
+#include <QApplication>
+#include <QWidget>
 
-int main(){
-    std::cout << "TEST\n";
+#include "UserWindow.h"
+
+int main(int argc, char *argv[ ])
+{
+    QApplication app(argc, argv);
+
+    UserWindow test("");
+
+    return app.exec();
+
 }
