@@ -13,6 +13,8 @@ public:
 private:
 
     void CreateTicketPopup();
+    void MarkResolved();
+    void PassTicket();
 
     ticket data;
 
@@ -29,4 +31,7 @@ private:
     std::unique_ptr<QLabel> popupDepartment;
     std::unique_ptr<QLabel> popupMessageLabel;
     std::unique_ptr<QLabel> popupMessage;
+
+    std::unique_ptr<QPushButton> markResolved;
+    std::unique_ptr<QPushButton> passTicket;
 };

@@ -5,7 +5,13 @@
 
 #include <QLabel>
 
+UserWindow* UserWindow::userWindow = nullptr;
+
 UserWindow::UserWindow(const std::string &username) {
+
+    if(userWindow)
+        throw std::runtime_error("Cannot create multiple UserWindow's");
+    userWindow = this;
 
     user = UserManager::GetUser(username);
 
@@ -49,7 +55,7 @@ UserWindow::UserWindow(const std::string &username) {
 }
 
 void UserWindow::RefreshGUI() {
-    for(auto& department : departmentsGUI){
+    for(auto& department : userWindow->departmentsGUI){
         department->Refresh();
     }
 }

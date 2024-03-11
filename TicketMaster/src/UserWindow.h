@@ -13,11 +13,14 @@ public:
     UserWindow() = delete;
     explicit UserWindow(const std::string& username);
 
+    static void RefreshGUI();
+
 private:
 
-    void RefreshGUI();
     void NewTicket();
     void CreateTicket();
+
+    static UserWindow* userWindow;
 
     std::shared_ptr<User> user;
     std::vector<std::unique_ptr<DepartmentTicketsGUI>> departmentsGUI;
