@@ -15,7 +15,7 @@ DepartmentTicketsGUI::DepartmentTicketsGUI(const std::string &departmentName, QW
 
     std::vector<ticket> tickets = ticketManager::GetDeptTickets(departmentName);
     for(int i = 0; i < tickets.size(); i++){
-        ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get()));
+        ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get(), userTickets));
         scrollGridLayout->addWidget(ticketsGUI.back().get(), i, 0, 1, 1);
     }
 
@@ -35,7 +35,7 @@ DepartmentTicketsGUI::DepartmentTicketsGUI(const std::string& sectionTitle, cons
 
     std::vector<ticket> tickets = ticketManager::GetUserTickets(userName);
     for(int i = 0; i < tickets.size(); i++){
-        ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get()));
+        ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get(), userTickets));
         scrollGridLayout->addWidget(ticketsGUI.back().get(), i, 0, 1, 1);
     }
 
@@ -85,7 +85,7 @@ void DepartmentTicketsGUI::Refresh() {
 
     // create tickets
     for(int i = 0; i < tickets.size(); i++){
-        ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get()));
+        ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get(), userTickets));
         scrollGridLayout->addWidget(ticketsGUI.back().get(), i, 0, 1, 1);
     }
 

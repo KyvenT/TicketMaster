@@ -17,6 +17,7 @@ private:
 
     void RefreshGUI();
     void NewTicket();
+    void CreateTicket();
 
     std::shared_ptr<User> user;
     std::vector<std::unique_ptr<DepartmentTicketsGUI>> departmentsGUI;
@@ -29,6 +30,14 @@ private:
     std::unique_ptr<QScrollArea> scrollArea;
     std::unique_ptr<QWidget> contents;
 
-    bool popupOpen = false;
-    std::unique_ptr<QWidget> popup;
+    std::unique_ptr<QWidget> popup = nullptr;
+    std::unique_ptr<QGridLayout> popupGridLayout;
+
+    std::unique_ptr<QLabel> titleFieldLabel;
+    std::unique_ptr<QLineEdit> titleField;
+    std::unique_ptr<QLabel> departmentFieldLabel;
+    std::unique_ptr<QLineEdit> departmentField;
+    std::unique_ptr<QLabel> messageFieldLabel;
+    std::unique_ptr<QTextEdit> messageField;
+    std::unique_ptr<QPushButton> createTicketButton;
 };

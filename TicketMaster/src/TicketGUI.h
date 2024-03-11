@@ -8,7 +8,7 @@
 class TicketGUI : public QPushButton {
 public:
     TicketGUI() = delete;
-    TicketGUI(ticket  ticketData, QWidget* parent);
+    TicketGUI(ticket  ticketData, QWidget* parent, bool showDepartment);
 
 private:
 
@@ -20,10 +20,17 @@ private:
     std::unique_ptr<QGridLayout> gridLayout;
     std::unique_ptr<QLabel> name;
     std::unique_ptr<QLabel> status;
-    std::unique_ptr<QLabel> otherTest;
+    std::unique_ptr<QLabel> department;
 
     // popup elements
-    bool popupOpen = false;
-    std::unique_ptr<QWidget> popup;
+    std::unique_ptr<QWidget> popup = nullptr;
+    std::unique_ptr<QGridLayout> popupGridLayout;
 
+    std::unique_ptr<QLabel> titleFieldLabel;
+    std::unique_ptr<QLabel> titleField;
+    std::unique_ptr<QLabel> departmentFieldLabel;
+    std::unique_ptr<QLabel> departmentField;
+    std::unique_ptr<QLabel> messageFieldLabel;
+    std::unique_ptr<QLabel> messageField;
+    std::unique_ptr<QPushButton> createTicketButton;
 };
