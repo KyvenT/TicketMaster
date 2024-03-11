@@ -52,18 +52,18 @@ void TicketGUI::CreateTicketPopup() {
     popupGridLayout = std::make_unique<QGridLayout>(popup.get());
 
     // title
-    titleFieldLabel = std::make_unique<QLabel>("Title: ", popup.get());
-    popupGridLayout->addWidget(titleFieldLabel.get(), 0, 0, 1, 3);
+    popupTitle = std::make_unique<QLabel>(("Title: " + data.getTitle()).c_str(), popup.get());
+    popupGridLayout->addWidget(popupTitle.get(), 0, 0, 1, 1);
 
     // department
-    departmentFieldLabel = std::make_unique<QLabel>("Department: ", popup.get());
-    popupGridLayout->addWidget(departmentFieldLabel.get(), 1, 0, 1, 3);
+    popupDepartment = std::make_unique<QLabel>(("Title: " + data.getDepartment()).c_str(), popup.get());
+    popupGridLayout->addWidget(popupDepartment.get(), 1, 0, 1, 1);
 
     // message
-    messageFieldLabel = std::make_unique<QLabel>("Messages: ", popup.get());
-    popupGridLayout->addWidget(messageFieldLabel.get(), 2, 0, 1, 1);
-    messageFieldLabel->setAlignment(Qt::AlignRight);
+    popupMessageLabel = std::make_unique<QLabel>("Messages: ", popup.get());
+    popupGridLayout->addWidget(popupMessageLabel.get(), 2, 0, 1, 1);
 
-    messageField = std::make_unique<QLabel>(data.getMessages()[0].message.c_str(), popup.get());
-    popupGridLayout->addWidget(messageField.get(), 2, 1, 1, 2);
+    popupMessage = std::make_unique<QLabel>(data.getMessages()[0].message.c_str(), popup.get());
+    popupGridLayout->addWidget(popupMessage.get(), 3, 0, 4, 1);
+    popupMessage->setAlignment(Qt::AlignRight);
 }

@@ -25,12 +25,8 @@ private:
     // popup elements
     std::unique_ptr<QWidget> popup = nullptr;
     std::unique_ptr<QGridLayout> popupGridLayout;
-
-    std::unique_ptr<QLabel> titleFieldLabel;
-    std::unique_ptr<QLabel> titleField;
-    std::unique_ptr<QLabel> departmentFieldLabel;
-    std::unique_ptr<QLabel> departmentField;
-    std::unique_ptr<QLabel> messageFieldLabel;
-    std::unique_ptr<QLabel> messageField;
-    std::unique_ptr<QPushButton> createTicketButton;
+    std::unique_ptr<QLabel> popupTitle;
+    std::unique_ptr<QLabel> popupDepartment;
+    std::unique_ptr<QLabel> popupMessageLabel;
+    std::unique_ptr<QLabel> popupMessage;
 };
