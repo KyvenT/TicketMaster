@@ -2,8 +2,8 @@
 TicketMaster/cmake*
 TicketMaster/out
 
-TicketMaster/CMakeFiles
+CMakeFiles
 cmake_install.cmake
 CMakeCache.txt
-TicketMaster/TicketMaster_autogen
+TicketMaster_autogen
 Makefile
