@@ -1,6 +1,8 @@
 #include "TicketGUI.h"
 
-TicketGUI::TicketGUI(QWidget *parent) : QPushButton(parent) {
+#include <utility>
+
+TicketGUI::TicketGUI(ticket  ticketData, QWidget *parent) : QPushButton(parent), data(std::move(ticketData)) {
 
     connect(this, &QPushButton::clicked, this, &TicketGUI::CreateTicketPopup);
 
@@ -26,14 +28,16 @@ TicketGUI::TicketGUI(QWidget *parent) : QPushButton(parent) {
     status->setFont(font);
     otherTest->setFont(font);
 
-    name->setText("Ticket Name");
+    name->setText(data.getTitle().c_str());
     status->setText("Status");
     otherTest->setText("Other Test");
 }
 
 void TicketGUI::CreateTicketPopup() {
-    if(popupOpen)
+    if(popupOpen){
+        popup->show();
         return;
+    }
     popupOpen = true;
 
     popup = std::make_unique<QWidget>();

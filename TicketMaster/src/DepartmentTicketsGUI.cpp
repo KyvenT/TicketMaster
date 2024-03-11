@@ -1,9 +1,49 @@
 #include <QLabel>
 #include "DepartmentTicketsGUI.h"
 #include "TicketGUI.h"
+#include "TicketManager.h"
 
-DepartmentTicketsGUI::DepartmentTicketsGUI(QWidget *parent) : QWidget(parent) {
+DepartmentTicketsGUI::DepartmentTicketsGUI(const std::string &departmentName, QWidget *parent) {
 
+    userTickets = false;
+    ticketSearchTerm = departmentName;
+
+    const QString tempDepartmentName = departmentName.c_str();
+    title = std::make_unique<QLabel>(tempDepartmentName + ": ", this);
+
+    Setup();
+
+    std::vector<ticket> tickets = ticketManager::GetDeptTickets(departmentName);
+    for(int i = 0; i < tickets.size(); i++){
+        ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get()));
+        scrollGridLayout->addWidget(ticketsGUI.back().get(), i, 0, 1, 1);
+    }
+
+    spacer = std::make_unique<QSpacerItem>(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    scrollGridLayout->addItem(spacer.get(), (int)tickets.size(), 0, 1, 1);
+}
+
+DepartmentTicketsGUI::DepartmentTicketsGUI(const std::string& sectionTitle, const std::string& userName, QWidget *parent) : QWidget(parent) {
+
+    userTickets = true;
+    ticketSearchTerm = userName;
+
+    const QString tempSectionTitle = sectionTitle.c_str();
+    title = std::make_unique<QLabel>(tempSectionTitle + ": ", this);
+
+    Setup();
+
+    std::vector<ticket> tickets = ticketManager::GetUserTickets(userName);
+    for(int i = 0; i < tickets.size(); i++){
+        ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get()));
+        scrollGridLayout->addWidget(ticketsGUI.back().get(), i, 0, 1, 1);
+    }
+
+    spacer = std::make_unique<QSpacerItem>(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    scrollGridLayout->addItem(spacer.get(), (int)tickets.size(), 0, 1, 1);
+}
+
+void DepartmentTicketsGUI::Setup() {
     QPalette pal = this->palette();
     pal.setColor(this->backgroundRole(), Qt::lightGray);
     this->setPalette(pal);
@@ -11,7 +51,6 @@ DepartmentTicketsGUI::DepartmentTicketsGUI(QWidget *parent) : QWidget(parent) {
     this->setMinimumHeight(300);
 
     gridLayout = std::make_unique<QGridLayout>(this);
-    title = std::make_unique<QLabel>("Department: ", this);
     gridLayout->addWidget(title.get(), 0, 0, 1, 1);
 
     QFont font = title->font();
@@ -26,21 +65,30 @@ DepartmentTicketsGUI::DepartmentTicketsGUI(QWidget *parent) : QWidget(parent) {
     scrollArea->setWidget(contents.get());
 
     scrollGridLayout = std::make_unique<QGridLayout>(contents.get());
+}
 
+void DepartmentTicketsGUI::Refresh() {
 
-    // testing
-    TicketGUI* t1 = new TicketGUI(contents.get());
-    scrollGridLayout->addWidget(t1, 0, 0, 1, 1);
+    // delete currently displayed tickets
+    scrollGridLayout->removeItem(spacer.get());
+    for(auto& ticket : ticketsGUI){
+        scrollGridLayout->removeWidget(ticket.get());
+    }
+    ticketsGUI.clear();
 
-    /*TicketGUI* t2 = new TicketGUI(contents.get());
-    scrollGridLayout->addWidget(t2, 1, 0, 1, 1);
+    // get tickets
+    std::vector<ticket> tickets;
+    if(userTickets)
+        tickets = ticketManager::GetUserTickets(ticketSearchTerm);
+    else
+        tickets = ticketManager::GetDeptTickets(ticketSearchTerm);
 
-    TicketGUI* t3 = new TicketGUI(contents.get());
-    scrollGridLayout->addWidget(t3, 2, 0, 1, 1);
-
-    TicketGUI* t4 = new TicketGUI(contents.get());
-    scrollGridLayout->addWidget(t4, 3, 0, 1, 1);*/
+    // create tickets
+    for(int i = 0; i < tickets.size(); i++){
+        ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get()));
+        scrollGridLayout->addWidget(ticketsGUI.back().get(), i, 0, 1, 1);
+    }
 
     spacer = std::make_unique<QSpacerItem>(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-    scrollGridLayout->addItem(spacer.get(), 4, 0, 1, 1);
+    scrollGridLayout->addItem(spacer.get(), (int)tickets.size(), 0, 1, 1);
 }

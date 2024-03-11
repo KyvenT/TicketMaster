@@ -3,15 +3,18 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QGridLayout>
+#include "Ticket.h"
 
 class TicketGUI : public QPushButton {
 public:
     TicketGUI() = delete;
-    TicketGUI(QWidget* parent);
+    TicketGUI(ticket  ticketData, QWidget* parent);
 
 private:
 
     void CreateTicketPopup();
+
+    ticket data;
 
     // button elements
     std::unique_ptr<QGridLayout> gridLayout;
