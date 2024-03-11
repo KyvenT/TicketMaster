@@ -3,6 +3,8 @@
 #include <iterator>
 #include <set>
 
+std::vector<std::shared_ptr<User>> UserManager::users = std::vector<std::shared_ptr<User>>();
+
 UserManager::UserManager() = default;
 
 std::shared_ptr<User> UserManager::CreateUser(const std::string& name, const std::string& password) {
@@ -44,7 +46,7 @@ void UserManager::RemoveUserFromDepartment(const std::string& name, const std::s
     }
 }
 
-std::vector<std::string> UserManager::GetExistingDepartments() const {
+std::vector<std::string> UserManager::GetExistingDepartments() {
     std::set<std::string> uniqueDepartments;
     for (const auto& user : users) {
         const auto& departments = user->GetDepartments();
@@ -53,7 +55,7 @@ std::vector<std::string> UserManager::GetExistingDepartments() const {
     return std::vector<std::string>(uniqueDepartments.begin(), uniqueDepartments.end());
 }
 
-const std::vector<std::shared_ptr<User>>& UserManager::GetUsers() const {
+const std::vector<std::shared_ptr<User>>& UserManager::GetUsers() {
     return users;
 }
 
