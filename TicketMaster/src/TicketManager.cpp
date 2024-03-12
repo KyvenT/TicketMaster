@@ -5,21 +5,21 @@ std::vector<Ticket> ticketManager::tickets;
 // Constructor
 ticketManager::ticketManager() = default;
 
-std::vector<Ticket> ticketManager::GetUserTickets(std::string user) {
-    std::vector<Ticket> userTickets;
+std::vector<Ticket*> ticketManager::GetUserTickets(const std::string& user) {
+    std::vector<Ticket*> userTickets;
     for (int i = 0; i < tickets.size(); i++) {
         if (tickets.at(i).getUser() == user) {
-            userTickets.push_back(tickets.at(i));
+            userTickets.push_back(&tickets[i]);
         }
     }
     return userTickets;
 }
 
-std::vector<Ticket> ticketManager::GetDeptTickets(std::string department) {
-    std::vector<Ticket> deptTickets;
+std::vector<Ticket*> ticketManager::GetDeptTickets(const std::string& department) {
+    std::vector<Ticket*> deptTickets;
     for (int i = 0; i < tickets.size(); i++) {
         if (tickets.at(i).getDepartment() == department) {
-            deptTickets.push_back(tickets.at(i));
+            deptTickets.push_back(&tickets[i]);
         }
     }
     return deptTickets;
