@@ -13,7 +13,7 @@ DepartmentTicketsGUI::DepartmentTicketsGUI(const std::string &departmentName, QW
 
     Setup();
 
-    std::vector<Ticket> tickets = ticketManager::GetDeptTickets(departmentName);
+    std::vector<Ticket*> tickets = ticketManager::GetDeptTickets(departmentName);
     for(int i = 0; i < tickets.size(); i++){
         ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get(), userTickets));
         scrollGridLayout->addWidget(ticketsGUI.back().get(), i, 0, 1, 1);
@@ -33,7 +33,7 @@ DepartmentTicketsGUI::DepartmentTicketsGUI(const std::string& sectionTitle, cons
 
     Setup();
 
-    std::vector<Ticket> tickets = ticketManager::GetUserTickets(userName);
+    std::vector<Ticket*> tickets = ticketManager::GetUserTickets(userName);
     for(int i = 0; i < tickets.size(); i++){
         ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get(), userTickets));
         scrollGridLayout->addWidget(ticketsGUI.back().get(), i, 0, 1, 1);
@@ -77,7 +77,7 @@ void DepartmentTicketsGUI::Refresh() {
     ticketsGUI.clear();
 
     // get tickets
-    std::vector<Ticket> tickets;
+    std::vector<Ticket*> tickets;
     if(userTickets)
         tickets = ticketManager::GetUserTickets(ticketSearchTerm);
     else

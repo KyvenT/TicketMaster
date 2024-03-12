@@ -8,7 +8,7 @@
 class TicketGUI : public QPushButton {
 public:
     TicketGUI() = delete;
-    TicketGUI(Ticket ticketData, QWidget* parent, bool showDepartment);
+    TicketGUI(Ticket* ticketData, QWidget* parent, bool showDepartment);
 
 private:
 
@@ -16,7 +16,7 @@ private:
     void MarkResolved();
     void PassTicket();
 
-    Ticket data;
+    Ticket* data;
 
     // button elements
     std::unique_ptr<QGridLayout> gridLayout;

@@ -4,7 +4,7 @@
 
 #include <utility>
 
-TicketGUI::TicketGUI(Ticket ticketData, QWidget *parent, bool showDepartment) : QPushButton(parent), data(std::move(ticketData)) {
+TicketGUI::TicketGUI(Ticket* ticketData, QWidget *parent, bool showDepartment) : QPushButton(parent), data(std::move(ticketData)) {
 
     connect(this, &QPushButton::clicked, this, &TicketGUI::CreateTicketPopup);
 
@@ -30,17 +30,17 @@ TicketGUI::TicketGUI(Ticket ticketData, QWidget *parent, bool showDepartment) : 
     status->setFont(font);
     department->setFont(font);
 
-    name->setText(data.getTitle().c_str());
+    name->setText(data->getTitle().c_str());
 
-    if(data.getStatus() == TicketStatus::WaitingForUser)
+    if(data->getStatus() == TicketStatus::WaitingForUser)
         status->setText("Waiting for User");
-    else if(data.getStatus() == TicketStatus::WaitingForDepartment)
+    else if(data->getStatus() == TicketStatus::WaitingForDepartment)
         status->setText("Waiting for Department");
     else
         status->setText("Resolved");
 
     if(showDepartment)
-        department->setText(data.getDepartment().c_str());
+        department->setText(data->getDepartment().c_str());
     else
         department->setText("");
 }
@@ -54,31 +54,31 @@ void TicketGUI::CreateTicketPopup() {
 
     // create window
     popup = std::make_unique<QWidget>();
-    popup->setWindowTitle(data.getTitle().c_str());
+    popup->setWindowTitle(data->getTitle().c_str());
     popup->resize(400, 300);
     popup->show();
 
     popupGridLayout = std::make_unique<QGridLayout>(popup.get());
 
     // title
-    popupTitle = std::make_unique<QLabel>(("Title: " + data.getTitle()).c_str(), popup.get());
+    popupTitle = std::make_unique<QLabel>(("Title: " + data->getTitle()).c_str(), popup.get());
     popupGridLayout->addWidget(popupTitle.get(), 0, 0, 1, 4);
 
     // department
-    popupDepartment = std::make_unique<QLabel>(("Title: " + data.getDepartment()).c_str(), popup.get());
+    popupDepartment = std::make_unique<QLabel>(("Title: " + data->getDepartment()).c_str(), popup.get());
     popupGridLayout->addWidget(popupDepartment.get(), 1, 0, 1, 4);
 
     // message
     popupMessageLabel = std::make_unique<QLabel>("Messages: ", popup.get());
     popupGridLayout->addWidget(popupMessageLabel.get(), 2, 0, 1, 4);
 
-    popupMessage = std::make_unique<QLabel>(data.getMessages()[0].message.c_str(), popup.get());
+    popupMessage = std::make_unique<QLabel>(data->getMessages()[0].message.c_str(), popup.get());
     popupGridLayout->addWidget(popupMessage.get(), 3, 0, 4, 4);
     popupMessage->setAlignment(Qt::AlignRight);
 
     // actions
     std::string passOn = "Pass to ";
-    if(data.getStatus() == TicketStatus::WaitingForUser)
+    if(data->getStatus() == TicketStatus::WaitingForUser)
         passOn += "Department";
     else
         passOn += "User";
@@ -93,14 +93,14 @@ void TicketGUI::CreateTicketPopup() {
 }
 
 void TicketGUI::MarkResolved() {
-    data.setStatus(TicketStatus::Resolved);
+    data->setStatus(TicketStatus::Resolved);
     UserWindow::RefreshGUI();
 }
 
 void TicketGUI::PassTicket() {
-    if(data.getStatus() == TicketStatus::WaitingForDepartment)
-        data.setStatus(TicketStatus::WaitingForUser);
+    if(data->getStatus() == TicketStatus::WaitingForDepartment)
+        data->setStatus(TicketStatus::WaitingForUser);
     else
-        data.setStatus(TicketStatus::WaitingForDepartment);
+        data->setStatus(TicketStatus::WaitingForDepartment);
     UserWindow::RefreshGUI();
 }
