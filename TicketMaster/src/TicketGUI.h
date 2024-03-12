@@ -3,6 +3,7 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QGridLayout>
+#include <memory>
 #include "Ticket.h"
 
 /**

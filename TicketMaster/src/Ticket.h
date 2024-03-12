@@ -25,6 +25,8 @@ struct Message {
     std::string message;
     std::string sender;
     std::chrono::time_point<std::chrono::system_clock> created = std::chrono::system_clock::now();
+    Message() = default;
+    Message(const std::string& message, const std::string& sender) : message(message), sender(sender) {}
 };
 
 /** Ticket class holds all data needed for each ticket
