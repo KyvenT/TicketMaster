@@ -4,7 +4,7 @@
 
 #include <utility>
 
-TicketGUI::TicketGUI(Ticket* ticketData, QWidget *parent, bool showDepartment) : QPushButton(parent), data(std::move(ticketData)) {
+TicketGUI::TicketGUI(Ticket* ticketData, QWidget *parent, bool showDepartment) : QPushButton(parent), data(std::move(ticketData)), showDepartment(showDepartment) {
 
     connect(this, &QPushButton::clicked, this, &TicketGUI::CreateTicketPopup);
 
@@ -13,22 +13,18 @@ TicketGUI::TicketGUI(Ticket* ticketData, QWidget *parent, bool showDepartment) :
 
     name = std::make_unique<QLabel>(this);
     status = std::make_unique<QLabel>(this);
-    department = std::make_unique<QLabel>(this);
 
     gridLayout->addWidget(name.get(), 0, 0, 1, 1);
     gridLayout->addWidget(status.get(), 0, 5, 1, 1);
-    gridLayout->addWidget(department.get(), 0, 1, 1, 4);
 
     name->setAlignment(Qt::AlignLeft);
     status->setAlignment(Qt::AlignRight);
-    department->setAlignment(Qt::AlignRight);
 
     QFont font = name->font();
     font.setPointSize(16);
 
     name->setFont(font);
     status->setFont(font);
-    department->setFont(font);
 
     name->setText(data->getTitle().c_str());
 
@@ -40,9 +36,7 @@ TicketGUI::TicketGUI(Ticket* ticketData, QWidget *parent, bool showDepartment) :
         status->setText("Resolved");
 
     if(showDepartment)
-        department->setText(data->getDepartment().c_str());
-    else
-        department->setText("");
+        status->setText((data->getDepartment() + " | " + status->text().toStdString()).c_str());
 }
 
 void TicketGUI::CreateTicketPopup() {
@@ -77,19 +71,36 @@ void TicketGUI::CreateTicketPopup() {
     popupMessage->setAlignment(Qt::AlignRight);
 
     // actions
-    std::string passOn = "Pass to ";
-    if(data->getStatus() == TicketStatus::WaitingForUser)
-        passOn += "Department";
-    else
-        passOn += "User";
+    // no actions to take if ticket is resolved
+    if(data->getStatus() == TicketStatus::Resolved)
+        return;
 
-    passTicket = std::make_unique<QPushButton>(passOn.c_str(), popup.get());
-    popupGridLayout->addWidget(passTicket.get(), 7, 1, 1, 1);
-    connect(passTicket.get(), &QPushButton::clicked, this, &TicketGUI::PassTicket);
-
+    // resolve
     markResolved = std::make_unique<QPushButton>("Mark as Resolved", popup.get());
-    popupGridLayout->addWidget(markResolved.get(), 7, 2, 1, 1);
     connect(markResolved.get(), &QPushButton::clicked, this, &TicketGUI::MarkResolved);
+
+    // check if option to switch should be availible
+    if((data->getStatus() == TicketStatus::WaitingForUser && showDepartment) ||
+        data->getStatus() == TicketStatus::WaitingForDepartment && !showDepartment)
+    {
+        // who to pass on to
+        std::string passOn = "Pass to ";
+        if(data->getStatus() == TicketStatus::WaitingForUser)
+            passOn += "Department";
+        else
+            passOn += "User";
+
+
+        passTicket = std::make_unique<QPushButton>(passOn.c_str(), popup.get());
+        popupGridLayout->addWidget(passTicket.get(), 7, 1, 1, 1);
+        connect(passTicket.get(), &QPushButton::clicked, this, &TicketGUI::PassTicket);
+
+        popupGridLayout->addWidget(markResolved.get(), 7, 2, 1, 1);
+    }
+    else{
+        // center button if only 1
+        popupGridLayout->addWidget(markResolved.get(), 7, 1, 1, 2);
+    }
 }
 
 void TicketGUI::MarkResolved() {

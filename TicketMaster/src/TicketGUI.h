@@ -17,12 +17,12 @@ private:
     void PassTicket();
 
     Ticket* data;
+    bool showDepartment;
 
     // button elements
     std::unique_ptr<QGridLayout> gridLayout;
     std::unique_ptr<QLabel> name;
     std::unique_ptr<QLabel> status;
-    std::unique_ptr<QLabel> department;
 
     // popup elements
     std::unique_ptr<QWidget> popup = nullptr;
