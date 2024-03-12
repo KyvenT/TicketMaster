@@ -108,15 +108,14 @@ void UserWindow::NewTicket() {
 
 void UserWindow::CreateTicket() {
 
-    if(!popup)
+    const bool emptyField = titleField->text().isEmpty() || departmentField->text().isEmpty() || messageField->toPlainText().isEmpty();
+    if((!popup) || emptyField){
+        QMessageBox::information(this, "Error", "One or more required fields are missing.",QMessageBox::Ok);
         return;
-    if(titleField->text().isEmpty())
-        return;
-    if(departmentField->text().isEmpty())
-        return;
-    if(messageField->toPlainText().isEmpty())
-        return;
+    }
 
     ticketManager::CreateTicket(user->GetName(), departmentField->text().toStdString(), titleField->text().toStdString(), messageField->toPlainText().toStdString());
     RefreshGUI();
+    QMessageBox::information(this, "Success", "The ticket has been created successfully.",QMessageBox::Ok);
+    popup->hide();
 }
