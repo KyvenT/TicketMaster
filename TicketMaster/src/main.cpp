@@ -1,8 +1,6 @@
 #include <QApplication>
-#include <QWidget>
-
-#include "UserWindow.h"
 #include "UserManager.h"
+#include "Login.h"
 
 int main(int argc, char *argv[ ])
 {
@@ -12,7 +10,7 @@ int main(int argc, char *argv[ ])
     UserManager::AddUserToDepartment("test", "Admin");
     UserManager::AddUserToDepartment("test", "Information Technology");
 
-    UserWindow test("test");
+    Login login(nullptr);
 
     return app.exec();
 
