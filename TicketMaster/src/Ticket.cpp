@@ -8,7 +8,7 @@
  * @param severity the ticket's severity
  * @param department a std::string of the name of the destination department
 */
-ticket::ticket(std::string title, std::string user, std::string message, TicketSeverity severity, std::string department) {
+Ticket::Ticket(std::string title, std::string user, std::string message, TicketSeverity severity, std::string department) {
     this->title = title;
     this->department = department;
     this->severity = severity;
@@ -27,7 +27,7 @@ ticket::ticket(std::string title, std::string user, std::string message, TicketS
 /** Function to set a department representative to a ticket
  * @param user a std::string of department representative's name
  */
-void ticket::setDeptRep(std::string user) {
+void Ticket::setDeptRep(std::string user) {
     this->deptRep = user;
     this->hasDeptRep = true;
     if (this->deptRep == "none") {
@@ -38,7 +38,7 @@ void ticket::setDeptRep(std::string user) {
 /** Function to return department representative of a ticket
  * @return department representative or "NO DEPARTMENT REPRESENTATIVE ASSIGNED"
  */
-std::string ticket::getDeptRep() {
+std::string Ticket::getDeptRep() {
     if (this->hasDeptRep) {
         return this->deptRep;
     }
@@ -46,53 +46,53 @@ std::string ticket::getDeptRep() {
 }
 
 // Adds a response message to the ticket
-void ticket::addMessage(std::string user, std::string message) {
+void Ticket::addMessage(std::string user, std::string message) {
     Message newResponse(message, user);
     this->messages.push_back(newResponse);
     this->lastModified = newResponse.created;
 }
 
-std::vector<Message> ticket::getMessages() {
+std::vector<Message> Ticket::getMessages() {
     return messages;
 }
 
-TicketStatus ticket::getStatus() {
+TicketStatus Ticket::getStatus() {
     return this->status;
 }
 
-void ticket::setStatus(TicketStatus newStatus) {
+void Ticket::setStatus(TicketStatus newStatus) {
     this->status = newStatus;
 }
 
-TicketSeverity ticket::getSeverity() {
+TicketSeverity Ticket::getSeverity() {
     return this->severity;
 }
 
-void ticket::setSeverity(TicketSeverity newSeverity) {
+void Ticket::setSeverity(TicketSeverity newSeverity) {
     this->severity = newSeverity;
 }
 
-std::string ticket::getUser() {
+std::string Ticket::getUser() {
     return this->user;
 }
 
-std::string ticket::getDepartment() {
+std::string Ticket::getDepartment() {
     return this->department;
 }
 
-std::string ticket::getTitle() {
+std::string Ticket::getTitle() {
     return this->title;
 }
 
-void ticket::setTitle(std::string title) {
+void Ticket::setTitle(std::string title) {
     this->title = title;
 }
 
-std::chrono::time_point<std::chrono::system_clock> ticket::getModifiedTime() {
+std::chrono::time_point<std::chrono::system_clock> Ticket::getModifiedTime() {
     return this->lastModified;
 }
 
-bool ticket::hasDepartmentRep() {
+bool Ticket::hasDepartmentRep() {
     return this->hasDeptRep;
 }
 

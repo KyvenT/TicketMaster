@@ -29,7 +29,7 @@ struct Message {
 
 /** Ticket class holds all data needed for each ticket
  */
-class ticket {
+class Ticket {
     public:
         /** Ticket Constructor
          * Needs title, user, message, severity, department
@@ -39,7 +39,7 @@ class ticket {
          * @param severity the ticket's severity
          * @param department a std::string of the name of the destination department
         */
-        explicit ticket(std::string title, std::string user, std::string message, TicketSeverity severity, std::string department);
+        explicit Ticket(std::string title, std::string user, std::string message, TicketSeverity severity, std::string department);
 
         /** Function to set a department representative to current ticket
          * @param user a weak_ptr<User> to the department representative

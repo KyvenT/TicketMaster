@@ -4,7 +4,7 @@
 
 #include <utility>
 
-TicketGUI::TicketGUI(ticket  ticketData, QWidget *parent, bool showDepartment) : QPushButton(parent), data(std::move(ticketData)) {
+TicketGUI::TicketGUI(Ticket ticketData, QWidget *parent, bool showDepartment) : QPushButton(parent), data(std::move(ticketData)) {
 
     connect(this, &QPushButton::clicked, this, &TicketGUI::CreateTicketPopup);
 

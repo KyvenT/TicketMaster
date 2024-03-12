@@ -1,12 +1,12 @@
 #include "TicketManager.h"
 
-std::vector<ticket> ticketManager::tickets;
+std::vector<Ticket> ticketManager::tickets;
 
 // Constructor
 ticketManager::ticketManager() = default;
 
-std::vector<ticket> ticketManager::GetUserTickets(std::string user) {
-    std::vector<ticket> userTickets;
+std::vector<Ticket> ticketManager::GetUserTickets(std::string user) {
+    std::vector<Ticket> userTickets;
     for (int i = 0; i < tickets.size(); i++) {
         if (tickets.at(i).getUser() == user) {
             userTickets.push_back(tickets.at(i));
@@ -15,8 +15,8 @@ std::vector<ticket> ticketManager::GetUserTickets(std::string user) {
     return userTickets;
 }
 
-std::vector<ticket> ticketManager::GetDeptTickets(std::string department) {
-    std::vector<ticket> deptTickets;
+std::vector<Ticket> ticketManager::GetDeptTickets(std::string department) {
+    std::vector<Ticket> deptTickets;
     for (int i = 0; i < tickets.size(); i++) {
         if (tickets.at(i).getDepartment() == department) {
             deptTickets.push_back(tickets.at(i));
@@ -27,7 +27,7 @@ std::vector<ticket> ticketManager::GetDeptTickets(std::string department) {
 
 void ticketManager::CreateTicket(std::string user, std::string department, std::string title, std::string message) {
     TicketSeverity initialSeverity = Mild;
-    ticket newTicket(title, user, message, initialSeverity, department);
+    Ticket newTicket(title, user, message, initialSeverity, department);
     tickets.push_back(newTicket);
 }
 
