@@ -54,6 +54,10 @@ UserWindow::UserWindow(const std::string &username) {
     }
 }
 
+UserWindow::~UserWindow() {
+    userWindow = nullptr;
+}
+
 void UserWindow::RefreshGUI() {
     for(auto& department : userWindow->departmentsGUI){
         department->Refresh();
