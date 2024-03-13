@@ -12,7 +12,7 @@ int main(int argc, char *argv[ ])
     UserManager::AddUserToDepartment("test", "Information Technology");
 
     Login login(nullptr);
-    AdminWindow adminWindow;
+    //AdminWindow adminWindow;
 
     return app.exec();
 
