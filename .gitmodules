@@ -1,0 +1,3 @@
+[submodule "TicketMaster/thirdParty/jsoncpp"]
+	path = TicketMaster/thirdParty/jsoncpp
+	url = https://github.com/open-source-parsers/jsoncpp.git
