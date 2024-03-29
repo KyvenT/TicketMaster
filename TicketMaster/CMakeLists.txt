@@ -34,4 +34,5 @@ add_executable(TicketMaster src/main.cpp
 )
 
 target_link_libraries(TicketMaster Qt5::Widgets)
+target_link_libraries(TicketMaster jsoncpp)
 target_include_directories(TicketMaster PRIVATE ${CMAKE_SOURCE_DIR}/thirdParty/jsoncpp/include)
