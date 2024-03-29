@@ -65,7 +65,7 @@ private:
     std::unique_ptr<QLabel> titleFieldLabel; /// the label for the title field in the popup window
     std::unique_ptr<QLineEdit> titleField; /// the title field in the popup window
     std::unique_ptr<QLabel> departmentFieldLabel; /// the label for the department field in the popup window
-    std::unique_ptr<QLineEdit> departmentField; /// the department field in the popup window
+    std::unique_ptr<QComboBox> departmentField; /// the department field in the popup window
     std::unique_ptr<QLabel> messageFieldLabel; /// the label for the message field in the popup window
     std::unique_ptr<QTextEdit> messageField; /// the message field in the popup window
     std::unique_ptr<QPushButton> createTicketButton; /// the button to create the ticket after all fields are filled

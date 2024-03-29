@@ -2,6 +2,7 @@
 
 #include <QScrollArea>
 #include <QGridLayout>
+#include <QComboBox>
 #include "TicketGUI.h"
 
 /**
@@ -38,11 +39,19 @@ private:
      */
     void Setup();
 
+    /**
+     * change the way tickets are sorted
+     */
+    void ChangeSortType(const QString& type);
+
+
     bool userTickets; /// if the tickets displayed are for the user or department
     std::string ticketSearchTerm; /// the search term to be used when searching the Ticket Manager
     std::vector<std::unique_ptr<TicketGUI>> ticketsGUI; /// an array of the gui elements for each ticket
+    std::string currentSortType; /// current method of sorting
 
     std::unique_ptr<QLabel> title; /// the title of the section
+    std::unique_ptr<QComboBox> sortType; /// allows sorting TicketGUIs in different ways
     std::unique_ptr<QGridLayout> gridLayout; /// grid layout to organize the section
     std::unique_ptr<QGridLayout> scrollGridLayout; /// grid layout to organize the ticket GUI's
     std::unique_ptr<QScrollArea> scrollArea; /// the scroll area to allow more tickets to be accessed than would fit on screen

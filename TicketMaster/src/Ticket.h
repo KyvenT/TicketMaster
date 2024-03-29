@@ -52,7 +52,7 @@ class Ticket {
         /** Function to get department rep of ticket
          * @return std::string department representative
          */
-        std::string getDeptRep();
+        std::string getDeptRep() const;
 
         /** Function to add response messages to ticket
          * @param user the user who created the response message
@@ -63,12 +63,12 @@ class Ticket {
         /** Function to get all messages associated with the ticket
          * @return a std::vector<Message> of the messages
          */
-        std::vector<Message> getMessages();
+        std::vector<Message> getMessages() const;
 
         /** Function to get current ticket status
          * @return ticket status
          */
-        TicketStatus getStatus();
+        TicketStatus getStatus() const;
 
         /** Function to set ticket status
          * @param newStatus the new ticket status
@@ -78,7 +78,7 @@ class Ticket {
         /** Function to get current ticket severity
          * @return ticket severity
          */
-        TicketSeverity getSeverity();
+        TicketSeverity getSeverity() const;
 
         /** Function to set ticket severity
          * @param newSeverity the new ticket severity
@@ -88,18 +88,18 @@ class Ticket {
         /** Function to get ticket creator user's name
          * @return ticket creator user
          */
-        std::string getUser();
+        std::string getUser() const;
 
         /** Function to get ticket's destination department
          * @return department name
          */
-        std::string getDepartment();
+        std::string getDepartment() const;
 
         /**
          * Function to get ticket's title
          * @return title
          */
-        std::string getTitle();
+        std::string getTitle() const;
 
         /**
          * Function to set ticket's title
@@ -111,7 +111,7 @@ class Ticket {
           * Function to get ticket's last modified time
           * @return last modified time
           */
-         std::chrono::time_point<std::chrono::system_clock> getModifiedTime();
+         std::chrono::time_point<std::chrono::system_clock> getModifiedTime() const;
 
          /**
           * Function to check if ticket has been assigned a department representative
