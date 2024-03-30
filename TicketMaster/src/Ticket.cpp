@@ -15,6 +15,7 @@ Ticket::Ticket(std::string title, std::string user, std::string message, TicketS
     this->status = WaitingForDepartment;
     this->user = user;
     this->hasDeptRep = false;
+    this->lastModified = std::chrono::system_clock::now();
     // convert message from std::string to Message struct
     Message firstMessage;
     firstMessage.message = message;
@@ -38,7 +39,7 @@ void Ticket::setDeptRep(std::string user) {
 /** Function to return department representative of a ticket
  * @return department representative or "NO DEPARTMENT REPRESENTATIVE ASSIGNED"
  */
-std::string Ticket::getDeptRep() {
+std::string Ticket::getDeptRep() const {
     if (this->hasDeptRep) {
         return this->deptRep;
     }
@@ -52,11 +53,11 @@ void Ticket::addMessage(std::string user, std::string message) {
     this->lastModified = newResponse.created;
 }
 
-std::vector<Message> Ticket::getMessages() {
+std::vector<Message> Ticket::getMessages() const {
     return messages;
 }
 
-TicketStatus Ticket::getStatus() {
+TicketStatus Ticket::getStatus() const {
     return this->status;
 }
 
@@ -64,7 +65,7 @@ void Ticket::setStatus(TicketStatus newStatus) {
     this->status = newStatus;
 }
 
-TicketSeverity Ticket::getSeverity() {
+TicketSeverity Ticket::getSeverity() const {
     return this->severity;
 }
 
@@ -72,15 +73,15 @@ void Ticket::setSeverity(TicketSeverity newSeverity) {
     this->severity = newSeverity;
 }
 
-std::string Ticket::getUser() {
+std::string Ticket::getUser() const {
     return this->user;
 }
 
-std::string Ticket::getDepartment() {
+std::string Ticket::getDepartment() const {
     return this->department;
 }
 
-std::string Ticket::getTitle() {
+std::string Ticket::getTitle() const {
     return this->title;
 }
 
@@ -88,7 +89,7 @@ void Ticket::setTitle(std::string title) {
     this->title = title;
 }
 
-std::chrono::time_point<std::chrono::system_clock> Ticket::getModifiedTime() {
+std::chrono::time_point<std::chrono::system_clock> Ticket::getModifiedTime() const {
     return this->lastModified;
 }
 

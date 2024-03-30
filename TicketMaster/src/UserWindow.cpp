@@ -93,8 +93,13 @@ void UserWindow::NewTicket() {
     popupGridLayout->addWidget(departmentFieldLabel.get(), 1, 0, 1, 1);
     departmentFieldLabel->setAlignment(Qt::AlignRight);
 
-    departmentField = std::make_unique<QLineEdit>(popup.get());
+    departmentField = std::make_unique<QComboBox>(popup.get());
     popupGridLayout->addWidget(departmentField.get(), 1, 1, 1, 2);
+
+    std::vector<std::string> departments = UserManager::GetExistingDepartments();
+    for(const std::string& department : departments){
+        departmentField->addItem(department.c_str());
+    }
 
     // message
     messageFieldLabel = std::make_unique<QLabel>("Message: ", popup.get());
@@ -112,13 +117,13 @@ void UserWindow::NewTicket() {
 
 void UserWindow::CreateTicket() {
 
-    const bool emptyField = titleField->text().isEmpty() || departmentField->text().isEmpty() || messageField->toPlainText().isEmpty();
+    const bool emptyField = titleField->text().isEmpty() || departmentField->currentText().isEmpty() || messageField->toPlainText().isEmpty();
     if((!popup) || emptyField){
         QMessageBox::information(this, "Error", "One or more required fields are missing.",QMessageBox::Ok);
         return;
     }
 
-    ticketManager::CreateTicket(user->GetName(), departmentField->text().toStdString(), titleField->text().toStdString(), messageField->toPlainText().toStdString());
+    ticketManager::CreateTicket(user->GetName(), departmentField->currentText().toStdString(), titleField->text().toStdString(), messageField->toPlainText().toStdString());
     RefreshGUI();
     QMessageBox::information(this, "Success", "The ticket has been created successfully.",QMessageBox::Ok);
     popup->hide();
