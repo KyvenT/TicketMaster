@@ -70,5 +70,17 @@ std::shared_ptr<User> UserManager::GetUser(const std::string& name) {
     return nullptr;
 }
 
+std::vector<std::shared_ptr<User>> UserManager::GetUsersInDepartment(const std::string& department) {
+    std::vector<std::shared_ptr<User>> usersInDepartment;
+    for (const auto& user : UserManager::users) {
+        const auto& departments = user->GetDepartments();
+        if (std::find(departments.begin(), departments.end(), department) != departments.end()) {
+            usersInDepartment.push_back(user);
+        }
+    }
+    return usersInDepartment;
+}
+
+
 
 

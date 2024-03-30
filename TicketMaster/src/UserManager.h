@@ -36,6 +36,8 @@ public:
     // Helper function to find a user by name. Returns a shared pointer to the user if found.
     static std::shared_ptr<User> GetUser(const std::string& name);
 
+    static std::vector<std::shared_ptr<User>> GetUsersInDepartment(const std::string& department);
+
 private:
     static std::vector<std::shared_ptr<User>> users; // List of users
 
