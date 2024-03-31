@@ -37,13 +37,13 @@ void Ticket::setDeptRep(std::string user) {
 }
 
 /** Function to return department representative of a ticket
- * @return department representative or "NO DEPARTMENT REPRESENTATIVE ASSIGNED"
+ * @return department representative or "None"
  */
 std::string Ticket::getDeptRep() const {
     if (this->hasDeptRep) {
         return this->deptRep;
     }
-    return "NO DEPARTMENT REPRESENTATIVE ASSIGNED";
+    return "None";
 }
 
 // Adds a response message to the ticket

@@ -8,7 +8,7 @@
  * Indicates a ticket's severity
  * @param severity
  */
-enum TicketSeverity { Urgent = 2, Moderate = 1, Mild = 0};
+enum TicketSeverity { Unknown = 3, Urgent = 2, Moderate = 1, Mild = 0};
 
 /** enum TicketStatus
  * Indicates a ticket's current status

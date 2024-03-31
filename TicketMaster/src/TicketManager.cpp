@@ -26,7 +26,7 @@ std::vector<Ticket*> ticketManager::GetDeptTickets(const std::string& department
 }
 
 void ticketManager::CreateTicket(std::string user, std::string department, std::string title, std::string message) {
-    TicketSeverity initialSeverity = Mild;
+    TicketSeverity initialSeverity = TicketSeverity::Unknown;
     Ticket newTicket(title, user, message, initialSeverity, department);
     tickets.push_back(newTicket);
 }
