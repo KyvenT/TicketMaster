@@ -3,6 +3,7 @@
 AdminWindow::AdminWindow(QWidget *parent) : QWidget(parent) {
     setWindowTitle("Admin Page");
     resize(1500, 800);
+    departmentNamesVector = UserManager::GetExistingDepartments();
 
     mainLayout = new QVBoxLayout(this);
 
@@ -10,20 +11,46 @@ AdminWindow::AdminWindow(QWidget *parent) : QWidget(parent) {
     usersLabelLayout = new QHBoxLayout;
     usersLabel = new QLabel("Users:");
     usersLabelLayout->addWidget(usersLabel);
-    usersLabelLayout->setAlignment(Qt::AlignRight);
+    usersLabel->setAlignment(Qt::AlignLeft);
+    mainLayout->addLayout(usersLabelLayout);
 
-    usersLineEdit = new QLineEdit;
-    usersLineEdit->setFixedWidth(400);
-    usersLabelLayout->addWidget(usersLineEdit);
+    //username input
+    QHBoxLayout *usernameLayout = new QHBoxLayout;
+    QLabel *usernameLabel = new QLabel("Username:");
+    usernameLineEdit = new QLineEdit;
+    usernameLayout->addWidget(usernameLabel);
+    usernameLayout->addWidget(usernameLineEdit);
+    mainLayout->addLayout(usernameLayout);
+
+    //password input
+    QHBoxLayout *passwordLayout = new QHBoxLayout;
+    QLabel *passwordLabel = new QLabel("Password:");
+    passwordLineEdit = new QLineEdit;
+    passwordLineEdit->setEchoMode(QLineEdit::Password);
+    passwordLayout->addWidget(passwordLabel);
+    passwordLayout->addWidget(passwordLineEdit);
+    mainLayout->addLayout(passwordLayout);
+
+    //department input
+    QHBoxLayout *departmentLayout = new QHBoxLayout;
+    QLabel *departmentLabel = new QLabel("Department:");
+    departmentComboBox = new MultiSelectComboBox;
+    departmentComboBox->setFixedWidth(400);
+    populateDepartmentsComboBox();
+    departmentLayout->addWidget(departmentLabel);
+    departmentLayout->addWidget(departmentComboBox);
+    mainLayout->addLayout(departmentLayout);
 
     usersAddButton = new QPushButton("Add");
     usersAddButton->setFixedWidth(100);
-    usersLabelLayout->addWidget(usersAddButton);
-
-    mainLayout->addLayout(usersLabelLayout);
+    QHBoxLayout *addButtonLayout = new QHBoxLayout;
+    addButtonLayout->addStretch();
+    addButtonLayout->addWidget(usersAddButton);
+    mainLayout->addLayout(addButtonLayout);
 
     usersScrollArea = new QScrollArea;
     usersScrollArea->setWidgetResizable(true);
+    usersScrollArea->setStyleSheet("background-color: #FFFFFF;");
     mainLayout->addWidget(usersScrollArea);
 
     //departments section
@@ -44,6 +71,7 @@ AdminWindow::AdminWindow(QWidget *parent) : QWidget(parent) {
 
     departmentsScrollArea = new QScrollArea;
     departmentsScrollArea->setWidgetResizable(true);
+    departmentsScrollArea->setStyleSheet("background-color: #FFFFFF;");
     mainLayout->addWidget(departmentsScrollArea);
 
     departmentsListLayout = new QVBoxLayout;
@@ -51,11 +79,127 @@ AdminWindow::AdminWindow(QWidget *parent) : QWidget(parent) {
     departmentsListWidget->setLayout(departmentsListLayout);
     departmentsScrollArea->setWidget(departmentsListWidget);
 
+    usersListLayout = new QVBoxLayout;
+    QWidget *usersListWidget = new QWidget;
+    usersListWidget->setLayout(usersListLayout);
+    usersScrollArea->setWidget(usersListWidget);
+    
     departmentNames = QSet<QString>();
-
+    populateUsersScrollArea();
+    connect(usersAddButton, &QPushButton::clicked, this, &AdminWindow::addUser);
+    populateDepartmentsScrollArea();
     connect(departmentsAddButton, &QPushButton::clicked, this, &AdminWindow::addDepartment);
 
     this->show();
+}
+
+void AdminWindow::populateUsersScrollArea() {
+    const std::vector<std::shared_ptr<User>>& users = UserManager::GetUsers();
+
+    //add each user to the user list in the UI
+    for (const auto& user : users) {
+        addUserWidget(user);
+    }
+}
+
+void AdminWindow::addUserWidget(const std::shared_ptr<User>& user) {
+    QLabel *usernameLabel = new QLabel(QString::fromStdString(user->GetName()));
+    QLabel *departmentLabel = new QLabel(QString::fromStdString(user->GetDepartments().front()));
+    QPushButton *deleteButton = new QPushButton("Delete");
+    deleteButton->setFixedSize(100, 20);
+
+    QWidget *userWidget = new QWidget;
+    QHBoxLayout *userLayout = new QHBoxLayout(userWidget);
+    userLayout->addWidget(usernameLabel);
+    userLayout->addWidget(departmentLabel);
+    userLayout->addWidget(deleteButton);
+
+    usersListLayout->addWidget(userWidget);
+
+    connect(deleteButton, &QPushButton::clicked, this, [=]() {
+        deleteUser(userWidget, QString::fromStdString(user->GetName()));
+    });
+}
+
+void AdminWindow::addUser() {
+    QString username = usernameLineEdit->text();
+    QString password = passwordLineEdit->text();
+    QString department = departmentComboBox->currentText();
+
+    if (!username.isEmpty() && !password.isEmpty() && !department.isEmpty()) {
+        //check if the username already exists
+        if (UserManager::GetUser(username.toStdString()) == nullptr) {
+            //creating user
+            std::shared_ptr<User> newUser = UserManager::CreateUser(username.toStdString(), password.toStdString());
+            if (newUser) {
+                //add the user to the selected department
+                UserManager::AddUserToDepartment(username.toStdString(), department.toStdString());
+                //add the user to the UI
+                addUserWidget(newUser);
+                //clear input fields
+                usernameLineEdit->clear();
+                passwordLineEdit->clear();
+            } else {
+                QMessageBox::warning(this, "Error", "Failed to create user.");
+            }
+        } else {
+            QMessageBox::warning(this, "Duplicate User", "This username already exists.");
+        }
+    } else {
+        QMessageBox::warning(this, "Missing Information", "Please fill in all fields.");
+    }
+}
+
+void AdminWindow::deleteUser(QWidget *userWidget, const QString &username) {
+    QLayout *layout = usersListLayout->layout();
+    if (layout) {
+        layout->removeWidget(userWidget);
+        userWidget->deleteLater();
+
+        //remove the user from UserManager
+        UserManager::RemoveUser(username.toStdString());
+    }
+}
+
+void AdminWindow::populateDepartmentsComboBox() {
+    //clear existing items in combo box
+    departmentComboBox->clear();
+
+    //populate combo box with existing departments from departmentNamesVector
+    for (const std::string& department : departmentNamesVector) {
+        departmentComboBox->addItem(QString::fromStdString(department));
+    }
+
+}
+
+void AdminWindow::populateDepartmentsScrollArea() {
+    //retrieve existing departments from UserManager
+    std::vector<std::string> existingDepartments = departmentNamesVector;
+
+    //populate scroll area with existing departments
+    for (const std::string& department : existingDepartments) {
+        addDepartmentWidget(QString::fromStdString(department));
+    }
+}
+
+void AdminWindow::addDepartmentWidget(const QString& departmentName) {
+    if (!departmentNames.contains(departmentName)) {
+        QPushButton *deleteButton = new QPushButton("Delete");
+        deleteButton->setFixedSize(100, 20);
+        QLabel *departmentLabel = new QLabel(departmentName);
+        QWidget *departmentWidget = new QWidget;
+        QHBoxLayout *departmentLayout = new QHBoxLayout(departmentWidget);
+        departmentLayout->addWidget(departmentLabel);
+        departmentLayout->addWidget(deleteButton);
+
+        departmentsListLayout->addWidget(departmentWidget);
+
+        connect(deleteButton, &QPushButton::clicked, this, [=]() {
+            deleteDepartment(departmentWidget, departmentName);
+        });
+
+        departmentNames.insert(departmentName);
+    }
 }
 
 void AdminWindow::addDepartment() {
@@ -79,18 +223,43 @@ void AdminWindow::addDepartment() {
             departmentsLineEdit->clear();
             
             departmentNames.insert(departmentName);
+            departmentNamesVector.push_back(departmentName.toStdString());
+
+            //update combo box
+            departmentComboBox->addItem(departmentName);
+            
         } else {
             QMessageBox::warning(this, "Duplicate Department", "This department already exists.");
         }
     }
 }
 
-
 void AdminWindow::deleteDepartment(QWidget *departmentWidget, const QString &departmentName) {
+    //check if there are users assigned to the department
+    std::vector<std::shared_ptr<User>> usersInDepartment = UserManager::GetUsersInDepartment(departmentName.toStdString());
+    if (!usersInDepartment.empty()) {
+        //show a message box informing the user that there are users assigned to the department
+        QMessageBox::warning(this, "Users in Department", "There are users assigned to this department. Please remove them before deleting the department.");
+        return; //exit without deleting the department
+    }
+
+    //if there are no users assigned to the department, proceed with deletion
     QLayout *layout = departmentsListLayout->layout();
     if (layout) {
         layout->removeWidget(departmentWidget);
         departmentWidget->deleteLater();
+
+        auto it = std::find(departmentNamesVector.begin(), departmentNamesVector.end(), departmentName.toStdString());
+        if (it != departmentNamesVector.end()) {
+            //remove the department from departmentNamesVector
+            departmentNamesVector.erase(it);
+        }
+
+        //remove the department from the combo box
+        int index = departmentComboBox->findText(departmentName);
+        if (index != -1) {
+            departmentComboBox->removeItem(index);
+        }
 
         departmentNames.remove(departmentName);
     }
