@@ -5,6 +5,7 @@
 #include <json/json.h>
 #include <ctime>
 #include <iostream>
+#include <iomanip>
 
 /** TicketManager class manages retrieving, storing, and filtering tickets
  */

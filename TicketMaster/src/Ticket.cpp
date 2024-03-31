@@ -97,6 +97,23 @@ bool Ticket::hasDepartmentRep() {
     return this->hasDeptRep;
 }
 
+Ticket::Ticket(std::string title, std::string user, std::vector<Message> messages, int severity,
+               std::string department, std::string deptRep, int status, std::chrono::time_point<std::chrono::system_clock> modifiedTime) {
+    this->title = title;
+    this->department = department;
+    this->severity = TicketSeverity(severity);
+    this->status = TicketStatus(status);
+    this->user = user;
+    this->deptRep = deptRep;
+    this->messages = messages;
+    this->lastModified = modifiedTime;
+    if (this->getDeptRep() == "NO DEPARTMENT REPRESENTATIVE ASSIGNED") {
+        this->hasDeptRep = false;
+    } else {
+        this->hasDeptRep = true;
+    }
+}
+
 
 
 
