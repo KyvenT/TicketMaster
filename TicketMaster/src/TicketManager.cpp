@@ -78,19 +78,13 @@ void ticketManager::SaveTickets() {
 }
 
 void ticketManager::ReadTickets() {
-    std::cout << "Read Tickets" << std::endl;
     std::ifstream ticketFile("tickets.json");
     Json::Reader reader;
     Json::Value readTicket;
-    std::cout << "test" << std::endl;
     reader.parse(ticketFile, readTicket);
     Json::Value ticketsJson = readTicket;
-    std::cout << "Before Tickets" << std::endl;
-    std::cout << ticketsJson["tickets"].size() << std::endl;
 
     for (int i = 0; i < ticketsJson["tickets"].size(); i++) {
-        std::cout << ticketsJson["tickets"][i]["title"].asString() << std::endl;
-
         std::tm tm;
         std::string modifTime = ticketsJson["tickets"][i]["modifiedTime"].asString();
         std::stringstream stringStream(modifTime);
@@ -100,16 +94,12 @@ void ticketManager::ReadTickets() {
 
         // Parse messages from Json file to std::vector<Message>
         std::vector<Message> messagesVec;
-        std::cout << ticketsJson["tickets"][i]["messages"].size() << std::endl;
         for (int j = 0; j < ticketsJson["tickets"][i]["messages"].size(); j++) {
             Message tempMessage;
-            std::cout << ticketsJson["tickets"][i]["messages"][j]["sender"].asString() << std::endl;
-            std::cout << ticketsJson["tickets"][i]["messages"][j]["text"].asString() << std::endl;
             tempMessage.sender = ticketsJson["tickets"][i]["messages"][j]["sender"].asString();
             tempMessage.message = ticketsJson["tickets"][i]["messages"][j]["text"].asString();
             messagesVec.push_back(tempMessage);
         }
-
 
         std::string title = ticketsJson["tickets"][i]["title"].asString();
         std::string user = ticketsJson["tickets"][i]["user"].asString();
@@ -120,12 +110,8 @@ void ticketManager::ReadTickets() {
         Ticket tempTicket(title, user, messagesVec, severity, department, deptRep, status, modifiedTime);
 
         tickets.push_back(tempTicket);
-        std::time_t modifyTime = std::chrono::system_clock::to_time_t(tickets[i].getModifiedTime());
-        std::cout << std::put_time(std::localtime(&modifyTime), "%c") << std::endl;
     }
 
-
-    //std::cout << ticketsJson << std::endl;
     ticketFile.close();
 }
 

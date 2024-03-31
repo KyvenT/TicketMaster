@@ -36,7 +36,7 @@ class Ticket {
         /** Ticket Constructor
          * Needs title, user, message, severity, department
          * @param title a std::string representing title of ticket
-         * @param user a weak_ptr<User> pointing to the user who created the ticket
+         * @param user a std::string of the user who created the ticket
          * @param message a std::string representing the initial message of the ticket
          * @param severity the ticket's severity
          * @param department a std::string of the name of the destination department
@@ -45,22 +45,21 @@ class Ticket {
 
         /** Constructor for converting saved tickets
          * Needs all stored information about the ticket
-         * @param title
-         * @param user
-         * @param messages
-         * @param severity
-         * @param department
-         * @param modifiedTime
-         * @param deptRep
-         * @param status
+         * @param title a std::string representing title of ticket
+         * @param user a std::string of user who created ticket
+         * @param messages a std::vector<Message> of messages
+         * @param severity the ticket's severity
+         * @param department a std::string of name of destination department
+         * @param modifiedTime a std::chrono::time_point<std::chrono::system_clock> of last modified time of ticket
+         * @param deptRep assigned department rep, or "None"
+         * @param status ticket status
          */
         Ticket(std::string title, std::string user, std::vector<Message> messages, int severity, std::string department,
                         std::string deptRep, int status, std::chrono::time_point<std::chrono::system_clock> modifiedTime);
 
         /** Function to set a department representative to current ticket
-         * @param user a weak_ptr<User> to the department representative
+         * @param user a std::string to the department representative
          */
-        // void setDeptRep(weak_ptr<User> user);
         void setDeptRep(std::string user);
 
         /** Function to get department rep of ticket
@@ -145,7 +144,6 @@ class Ticket {
         std::string department;
 
         /// Assigned department representatitive
-        // weak_ptr<User> departmentRep;
         std::string deptRep;
 
         /// Messages in ticket

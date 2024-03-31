@@ -24,14 +24,13 @@ Ticket::Ticket(std::string title, std::string user, std::string message, TicketS
 
 }
 
-// void ticket::setDeptRep(weak_ptr<User> user)
 /** Function to set a department representative to a ticket
  * @param user a std::string of department representative's name
  */
 void Ticket::setDeptRep(std::string user) {
     this->deptRep = user;
     this->hasDeptRep = true;
-    if (this->deptRep == "none") {
+    if (this->deptRep == "None") {
         this->hasDeptRep = false;
     }
 }
@@ -107,7 +106,7 @@ Ticket::Ticket(std::string title, std::string user, std::vector<Message> message
     this->deptRep = deptRep;
     this->messages = messages;
     this->lastModified = modifiedTime;
-    if (this->getDeptRep() == "NO DEPARTMENT REPRESENTATIVE ASSIGNED") {
+    if (this->getDeptRep() == "None") {
         this->hasDeptRep = false;
     } else {
         this->hasDeptRep = true;
