@@ -57,15 +57,24 @@ void DepartmentTicketsGUI::Setup() {
     font.setPointSize(24);
     title->setFont(font);
 
+    sortType = std::make_unique<QComboBox>(this);
+    gridLayout->addWidget(sortType.get(), 0, 1, 1, 1);
+    sortType->addItem("Oldest First");
+    sortType->addItem("Newest First");
+    sortType->addItem("Highest Priority");
+    connect(sortType.get(), &QComboBox::currentTextChanged, this, &DepartmentTicketsGUI::ChangeSortType);
+
     scrollArea = std::make_unique<QScrollArea>(this);
     scrollArea->setWidgetResizable(true);
-    gridLayout->addWidget(scrollArea.get(), 1, 0, 1, 1);
+    gridLayout->addWidget(scrollArea.get(), 1, 0, 1, 2);
 
     contents = std::make_unique<QWidget>();
     scrollArea->setWidget(contents.get());
 
     scrollGridLayout = std::make_unique<QGridLayout>(contents.get());
 }
+
+#include <iostream>
 
 void DepartmentTicketsGUI::Refresh() {
 
@@ -83,6 +92,23 @@ void DepartmentTicketsGUI::Refresh() {
     else
         tickets = ticketManager::GetDeptTickets(ticketSearchTerm);
 
+    // sort tickets
+    if(currentSortType == "Highest Priority"){
+        std::sort(tickets.begin(), tickets.end(), [](const Ticket* a, const Ticket* b) {
+            return a->getSeverity() > b->getSeverity();
+        });
+    }
+    else if(currentSortType == "Newest First"){
+        std::sort(tickets.begin(), tickets.end(), [](const Ticket* a, const Ticket* b) {
+            return a->getModifiedTime() > b->getModifiedTime();
+        });
+    }
+    else { // "Oldest First"
+        std::sort(tickets.begin(), tickets.end(), [](const Ticket* a, const Ticket* b) {
+            return a->getModifiedTime() < b->getModifiedTime();
+        });
+    }
+
     // create tickets
     for(int i = 0; i < tickets.size(); i++){
         ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get(), userTickets));
@@ -91,4 +117,9 @@ void DepartmentTicketsGUI::Refresh() {
 
     spacer = std::make_unique<QSpacerItem>(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
     scrollGridLayout->addItem(spacer.get(), (int)tickets.size(), 0, 1, 1);
+}
+
+void DepartmentTicketsGUI::ChangeSortType(const QString& type) {
+    currentSortType = type.toStdString();
+    Refresh();
 }

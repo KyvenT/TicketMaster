@@ -2,6 +2,10 @@
 
 #include "Ticket.h"
 #include <fstream>
+#include <json/json.h>
+#include <ctime>
+#include <iostream>
+#include <iomanip>
 
 /** TicketManager class manages retrieving, storing, and filtering tickets
  */
@@ -41,4 +45,14 @@ class ticketManager {
          * @param title title of the ticket
          */
         static void DeleteTicket(std::string user, std::string department, std::string title);
+
+        /**
+         * Function to save tickets vector into a tickets.json file
+         */
+        static void SaveTickets();
+
+        /**
+         * Function to read a tickets.json file containing tickets into the tickets vector
+         */
+        static void ReadTickets();
 };

@@ -8,7 +8,7 @@
  * Indicates a ticket's severity
  * @param severity
  */
-enum TicketSeverity { Urgent = 2, Moderate = 1, Mild = 0};
+enum TicketSeverity { Unknown = 3, Urgent = 2, Moderate = 1, Mild = 0};
 
 /** enum TicketStatus
  * Indicates a ticket's current status
@@ -36,23 +36,36 @@ class Ticket {
         /** Ticket Constructor
          * Needs title, user, message, severity, department
          * @param title a std::string representing title of ticket
-         * @param user a weak_ptr<User> pointing to the user who created the ticket
+         * @param user a std::string of the user who created the ticket
          * @param message a std::string representing the initial message of the ticket
          * @param severity the ticket's severity
          * @param department a std::string of the name of the destination department
         */
-        explicit Ticket(std::string title, std::string user, std::string message, TicketSeverity severity, std::string department);
+        Ticket(std::string title, std::string user, std::string message, TicketSeverity severity, std::string department);
+
+        /** Constructor for converting saved tickets
+         * Needs all stored information about the ticket
+         * @param title a std::string representing title of ticket
+         * @param user a std::string of user who created ticket
+         * @param messages a std::vector<Message> of messages
+         * @param severity the ticket's severity
+         * @param department a std::string of name of destination department
+         * @param modifiedTime a std::chrono::time_point<std::chrono::system_clock> of last modified time of ticket
+         * @param deptRep assigned department rep, or "None"
+         * @param status ticket status
+         */
+        Ticket(std::string title, std::string user, std::vector<Message> messages, int severity, std::string department,
+                        std::string deptRep, int status, std::chrono::time_point<std::chrono::system_clock> modifiedTime);
 
         /** Function to set a department representative to current ticket
-         * @param user a weak_ptr<User> to the department representative
+         * @param user a std::string to the department representative
          */
-        // void setDeptRep(weak_ptr<User> user);
         void setDeptRep(std::string user);
 
         /** Function to get department rep of ticket
          * @return std::string department representative
          */
-        std::string getDeptRep();
+        std::string getDeptRep() const;
 
         /** Function to add response messages to ticket
          * @param user the user who created the response message
@@ -63,12 +76,12 @@ class Ticket {
         /** Function to get all messages associated with the ticket
          * @return a std::vector<Message> of the messages
          */
-        std::vector<Message> getMessages();
+        std::vector<Message> getMessages() const;
 
         /** Function to get current ticket status
          * @return ticket status
          */
-        TicketStatus getStatus();
+        TicketStatus getStatus() const;
 
         /** Function to set ticket status
          * @param newStatus the new ticket status
@@ -78,7 +91,7 @@ class Ticket {
         /** Function to get current ticket severity
          * @return ticket severity
          */
-        TicketSeverity getSeverity();
+        TicketSeverity getSeverity() const;
 
         /** Function to set ticket severity
          * @param newSeverity the new ticket severity
@@ -88,18 +101,18 @@ class Ticket {
         /** Function to get ticket creator user's name
          * @return ticket creator user
          */
-        std::string getUser();
+        std::string getUser() const;
 
         /** Function to get ticket's destination department
          * @return department name
          */
-        std::string getDepartment();
+        std::string getDepartment() const;
 
         /**
          * Function to get ticket's title
          * @return title
          */
-        std::string getTitle();
+        std::string getTitle() const;
 
         /**
          * Function to set ticket's title
@@ -111,7 +124,7 @@ class Ticket {
           * Function to get ticket's last modified time
           * @return last modified time
           */
-         std::chrono::time_point<std::chrono::system_clock> getModifiedTime();
+         std::chrono::time_point<std::chrono::system_clock> getModifiedTime() const;
 
          /**
           * Function to check if ticket has been assigned a department representative
@@ -131,7 +144,6 @@ class Ticket {
         std::string department;
 
         /// Assigned department representatitive
-        // weak_ptr<User> departmentRep;
         std::string deptRep;
 
         /// Messages in ticket
