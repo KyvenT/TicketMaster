@@ -30,6 +30,9 @@ add_executable(TicketMaster src/main.cpp
         src/TicketGUI.h
         src/Login.cpp
         src/Login.h
+        src/MultiSelectComboBox.h
+        src/MultiSelectComboBox.h
+        src/MultiSelectComboBox.cpp
 )
 
 target_link_libraries(TicketMaster Qt5::Widgets)
