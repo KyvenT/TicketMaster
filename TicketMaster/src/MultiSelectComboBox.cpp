@@ -12,7 +12,6 @@ MultiSelectComboBox::MultiSelectComboBox(QWidget *parent) : QComboBox(parent)
     // Ensure the combo box doesn't close on item selection
     view()->viewport()->installEventFilter(this);
 
-    // Optional: Configure the line edit for displaying selected items (if you plan to use it)
     setEditable(true);
     lineEdit()->setReadOnly(true);
     lineEdit()->setCursor(Qt::ArrowCursor);
