@@ -1,10 +1,10 @@
-#ifndef TICKETMASTER_MULTISELECTCOMBOBOX_H
-#define TICKETMASTER_MULTISELECTCOMBOBOX_H
 #ifndef MULTISELECTCOMBOBOX_H
 #define MULTISELECTCOMBOBOX_H
 
 #include <QComboBox>
 #include <QStandardItemModel>
+#include <QEvent>
+#include <QMouseEvent>
 
 class MultiSelectComboBox : public QComboBox
 {
@@ -13,13 +13,14 @@ Q_OBJECT
 public:
     explicit MultiSelectComboBox(QWidget *parent = nullptr);
 
-    // Utility functions to manage selections
-    QStringList selectedItems() const;
-    void setSelectedItems(const QStringList &items);
+protected:
+    virtual void showPopup() override;
+    virtual void hidePopup() override;
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
     QStandardItemModel *model;
 };
 
 #endif // MULTISELECTCOMBOBOX_H
-#endif //TICKETMASTER_MULTISELECTCOMBOBOX_H
+
