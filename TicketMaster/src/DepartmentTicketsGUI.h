@@ -25,7 +25,7 @@ public:
      * @param userName the name of the user to display tickets for
      * @param parent the parent widget the GUI should be attached to
      */
-    DepartmentTicketsGUI(const std::string& sectionTitle, const std::string& userName, QWidget* parent);
+    DepartmentTicketsGUI(const std::string& sectionTitle, const std::string& userName, bool claimedTickets, QWidget* parent);
 
     ~DepartmentTicketsGUI() override;
 
@@ -53,6 +53,8 @@ private:
 
 
     bool userTickets; /// if the tickets displayed are for the user or department
+    bool isAdmin;
+    bool claimedTickets;
     std::string ticketSearchTerm; /// the search term to be used when searching the Ticket Manager
     std::vector<std::unique_ptr<TicketGUI>> ticketsGUI; /// an array of the gui elements for each ticket
     std::string currentSortType; /// current method of sorting

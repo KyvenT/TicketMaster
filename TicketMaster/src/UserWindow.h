@@ -35,15 +35,11 @@ public:
 
     static void RegenerateGUI();
 
+    static void RegenerateClaimedTickets();
+
     static std::string GetUsersName();
 
 private:
-
-    /**
-     *
-     * @param event Qt close event from window closing
-     */
-    void closeEvent(QCloseEvent *event);
 
     /**
      * Opens the new ticket popup

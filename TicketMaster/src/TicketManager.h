@@ -28,6 +28,12 @@ class ticketManager {
          * @return std::vector<ticket> of tickets
          */
         static std::vector<Ticket*> GetDeptTickets(const std::string& department);
+        /**
+        * Function to get tickets sent to a department, and then claimed by the user
+        * @param user user who claimed the tickets
+        * @return std::vector<ticket> of tickets
+        */
+        static std::vector<Ticket*> GetUserClaimedTickets(const std::string& user);
 
         /**
          * Function to create a new ticket given user who created it, destination department, title of ticket, and initial ticket message

@@ -44,17 +44,26 @@ UserWindow::UserWindow(const std::string &username) {
 
     scrollGridLayout = std::make_unique<QGridLayout>(contents.get());
 
-    departmentsGUI.push_back(std::make_unique<DepartmentTicketsGUI>("My Tickets", user->GetName(), contents.get()));
+    int offset = 1;
+    departmentsGUI.push_back(std::make_unique<DepartmentTicketsGUI>("Created Tickets", user->GetName(), false, contents.get()));
     scrollGridLayout->addWidget(departmentsGUI.back().get(), 0, 0, 1, 1);
+
+    if(!user->GetDepartments().empty()){
+        departmentsGUI.push_back(std::make_unique<DepartmentTicketsGUI>("My Tickets", user->GetName(), true, contents.get()));
+        scrollGridLayout->addWidget(departmentsGUI.back().get(), 1, 0, 1, 1);
+        offset++;
+    }
 
     const std::vector<std::string>& departments = user->GetDepartments();
     for(int i = 0; i < departments.size(); i++){
         departmentsGUI.push_back(std::make_unique<DepartmentTicketsGUI>(departments[i], contents.get()));
-        scrollGridLayout->addWidget(departmentsGUI.back().get(), i + 1, 0, 1, 1);
+        scrollGridLayout->addWidget(departmentsGUI.back().get(), i + offset, 0, 1, 1);
     }
 }
 
 UserWindow::~UserWindow() {
+    ticketManager::SaveTickets();
+
     gridLayout->removeItem(spacer.get());
     for(const auto& dept : departmentsGUI){
         scrollGridLayout->removeWidget(dept.get());
@@ -75,6 +84,17 @@ void UserWindow::RegenerateGUI() {
     for(auto& department : userWindow->departmentsGUI){
         department->Regenerate();
     }
+}
+
+void UserWindow::RegenerateClaimedTickets() {
+    if(userWindow->user->GetDepartments().empty())
+        return;
+
+    userWindow->departmentsGUI[1]->Regenerate();
+}
+
+std::string UserWindow::GetUsersName() {
+    return userWindow->user->GetName();
 }
 
 void UserWindow::NewTicket() {
@@ -144,18 +164,4 @@ void UserWindow::CreateTicket() {
     titleField->setText("");
     departmentField->setCurrentIndex(0);
     messageField->setText("");
-}
-
-std::string UserWindow::GetUsersName() {
-    return userWindow->user->GetName();
-}
-
-void UserWindow::closeEvent(QCloseEvent *event) {
-    QMessageBox::StandardButton resBtn = QMessageBox::question(this, "User Window", tr("Close TicketManager?\n"), QMessageBox::No | QMessageBox::Yes, QMessageBox::Yes);
-    if (resBtn == QMessageBox::Yes) {
-        ticketManager::SaveTickets();
-        event->accept();
-    } else {
-        event->ignore();
-    }
 }

@@ -30,7 +30,7 @@ TicketGUI::TicketGUI(Ticket* ticketData, QWidget *parent, bool showDepartment, b
     status->setFont(font);
 
     name->setText(data->getTitle().c_str());
-    status->setText(ticketStatusToString[data->getStatus()].c_str());
+    status->setText((ticketSeverityToString[data->getSeverity()] + " | " + ticketStatusToString[data->getStatus()]).c_str());
     if(showDepartment)
         status->setText((data->getDepartment() + " | " + status->text().toStdString()).c_str());
 }
@@ -51,7 +51,9 @@ TicketGUI::~TicketGUI() {
 
 void TicketGUI::RefreshTicketPopup() {
 
-    status->setText(ticketStatusToString[data->getStatus()].c_str());
+    status->setText((ticketSeverityToString[data->getSeverity()] + " | " + ticketStatusToString[data->getStatus()]).c_str());
+    if(showDepartment)
+        status->setText((data->getDepartment() + " | " + status->text().toStdString()).c_str());
 
     if(!popup)
         return;
@@ -222,7 +224,9 @@ void TicketGUI::CreateTicketPopup() {
 
 void TicketGUI::ChangeDeptRep() {
     data->setDeptRep(popupDepartmentRepAdmin->currentText().toStdString());
-    UserWindow::RefreshGUI();
+
+    //UserWindow::RefreshGUI();
+    UserWindow::RegenerateClaimedTickets();
 }
 
 void TicketGUI::ChangeSeverity() {

@@ -6,6 +6,7 @@
 DepartmentTicketsGUI::DepartmentTicketsGUI(const std::string &departmentName, QWidget *parent) {
 
     userTickets = false;
+    isAdmin = true;
     ticketSearchTerm = departmentName;
 
     const QString tempDepartmentName = departmentName.c_str();
@@ -15,7 +16,7 @@ DepartmentTicketsGUI::DepartmentTicketsGUI(const std::string &departmentName, QW
 
     std::vector<Ticket*> tickets = ticketManager::GetDeptTickets(departmentName);
     for(int i = 0; i < tickets.size(); i++){
-        ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get(), userTickets, !userTickets));
+        ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get(), userTickets, isAdmin));
         scrollGridLayout->addWidget(ticketsGUI.back().get(), i, 0, 1, 1);
     }
 
@@ -23,7 +24,7 @@ DepartmentTicketsGUI::DepartmentTicketsGUI(const std::string &departmentName, QW
     scrollGridLayout->addItem(spacer.get(), (int)tickets.size(), 0, 1, 1);
 }
 
-DepartmentTicketsGUI::DepartmentTicketsGUI(const std::string& sectionTitle, const std::string& userName, QWidget *parent) : QWidget(parent) {
+DepartmentTicketsGUI::DepartmentTicketsGUI(const std::string& sectionTitle, const std::string& userName, bool claimedTickets, QWidget *parent) : QWidget(parent), claimedTickets(claimedTickets) {
 
     userTickets = true;
     ticketSearchTerm = userName;
@@ -33,9 +34,18 @@ DepartmentTicketsGUI::DepartmentTicketsGUI(const std::string& sectionTitle, cons
 
     Setup();
 
-    std::vector<Ticket*> tickets = ticketManager::GetUserTickets(userName);
+    std::vector<Ticket*> tickets;
+    if(claimedTickets){
+        tickets = ticketManager::GetUserClaimedTickets(userName);
+        isAdmin = true;
+    }
+    else{
+        tickets = ticketManager::GetUserTickets(userName);
+        isAdmin = false;
+    }
+
     for(int i = 0; i < tickets.size(); i++){
-        ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get(), userTickets, !userTickets));
+        ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get(), userTickets, isAdmin));
         scrollGridLayout->addWidget(ticketsGUI.back().get(), i, 0, 1, 1);
     }
 
@@ -100,10 +110,17 @@ void DepartmentTicketsGUI::Regenerate() {
 
     // get tickets
     std::vector<Ticket*> tickets;
-    if(userTickets)
-        tickets = ticketManager::GetUserTickets(ticketSearchTerm);
-    else
+    if(userTickets){
+        if(claimedTickets){
+            tickets = ticketManager::GetUserClaimedTickets(ticketSearchTerm);
+        }
+        else{
+            tickets = ticketManager::GetUserTickets(ticketSearchTerm);
+        }
+    }
+    else{
         tickets = ticketManager::GetDeptTickets(ticketSearchTerm);
+    }
 
     // sort tickets
     if(currentSortType == "Highest Priority"){
@@ -124,7 +141,7 @@ void DepartmentTicketsGUI::Regenerate() {
 
     // create tickets
     for(int i = 0; i < tickets.size(); i++){
-        ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get(), userTickets, !userTickets));
+        ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get(), userTickets, isAdmin));
         scrollGridLayout->addWidget(ticketsGUI.back().get(), i, 0, 1, 1);
     }
 
@@ -134,5 +151,5 @@ void DepartmentTicketsGUI::Regenerate() {
 
 void DepartmentTicketsGUI::ChangeSortType(const QString& type) {
     currentSortType = type.toStdString();
-    Refresh();
+    Regenerate();
 }

@@ -25,6 +25,16 @@ std::vector<Ticket*> ticketManager::GetDeptTickets(const std::string& department
     return deptTickets;
 }
 
+std::vector<Ticket*> ticketManager::GetUserClaimedTickets(const std::string &user) {
+    std::vector<Ticket*> claimedTickets;
+    for (int i = 0; i < tickets.size(); i++) {
+        if (tickets[i].getDeptRep() == user) {
+            claimedTickets.push_back(&tickets[i]);
+        }
+    }
+    return claimedTickets;
+}
+
 void ticketManager::CreateTicket(std::string user, std::string department, std::string title, std::string message) {
     TicketSeverity initialSeverity = TicketSeverity::Unknown;
     Ticket newTicket(title, user, message, initialSeverity, department);
@@ -114,4 +124,3 @@ void ticketManager::ReadTickets() {
 
     ticketFile.close();
 }
-
