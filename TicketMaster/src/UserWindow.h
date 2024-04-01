@@ -3,6 +3,7 @@
 #include <QtWidgets>
 #include <QLabel>
 #include <string>
+#include <QCloseEvent>
 
 #include "User.h"
 #include "DepartmentTicketsGUI.h"
@@ -37,6 +38,12 @@ public:
     static std::string GetUsersName();
 
 private:
+
+    /**
+     *
+     * @param event Qt close event from window closing
+     */
+    void closeEvent(QCloseEvent *event);
 
     /**
      * Opens the new ticket popup

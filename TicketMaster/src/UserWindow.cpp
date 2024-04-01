@@ -149,3 +149,13 @@ void UserWindow::CreateTicket() {
 std::string UserWindow::GetUsersName() {
     return userWindow->user->GetName();
 }
+
+void UserWindow::closeEvent(QCloseEvent *event) {
+    QMessageBox::StandardButton resBtn = QMessageBox::question(this, "User Window", tr("Close TicketManager?\n"), QMessageBox::No | QMessageBox::Yes, QMessageBox::Yes);
+    if (resBtn == QMessageBox::Yes) {
+        ticketManager::SaveTickets();
+        event->accept();
+    } else {
+        event->ignore();
+    }
+}
