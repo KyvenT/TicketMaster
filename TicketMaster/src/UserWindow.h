@@ -32,6 +32,10 @@ public:
      */
     static void RefreshGUI();
 
+    static void RegenerateGUI();
+
+    static std::string GetUsersName();
+
 private:
 
     /**

@@ -15,7 +15,7 @@ DepartmentTicketsGUI::DepartmentTicketsGUI(const std::string &departmentName, QW
 
     std::vector<Ticket*> tickets = ticketManager::GetDeptTickets(departmentName);
     for(int i = 0; i < tickets.size(); i++){
-        ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get(), userTickets));
+        ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get(), userTickets, !userTickets));
         scrollGridLayout->addWidget(ticketsGUI.back().get(), i, 0, 1, 1);
     }
 
@@ -35,12 +35,21 @@ DepartmentTicketsGUI::DepartmentTicketsGUI(const std::string& sectionTitle, cons
 
     std::vector<Ticket*> tickets = ticketManager::GetUserTickets(userName);
     for(int i = 0; i < tickets.size(); i++){
-        ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get(), userTickets));
+        ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get(), userTickets, !userTickets));
         scrollGridLayout->addWidget(ticketsGUI.back().get(), i, 0, 1, 1);
     }
 
     spacer = std::make_unique<QSpacerItem>(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
     scrollGridLayout->addItem(spacer.get(), (int)tickets.size(), 0, 1, 1);
+}
+
+DepartmentTicketsGUI::~DepartmentTicketsGUI() {
+    scrollGridLayout->removeItem(spacer.get());
+    for(auto& ticket : ticketsGUI){
+        scrollGridLayout->removeWidget(ticket.get());
+    }
+    ticketsGUI.clear();
+    scrollGridLayout = nullptr;
 }
 
 void DepartmentTicketsGUI::Setup() {
@@ -74,9 +83,13 @@ void DepartmentTicketsGUI::Setup() {
     scrollGridLayout = std::make_unique<QGridLayout>(contents.get());
 }
 
-#include <iostream>
-
 void DepartmentTicketsGUI::Refresh() {
+    for(auto& ticket : ticketsGUI){
+        ticket->RefreshTicketPopup();
+    }
+}
+
+void DepartmentTicketsGUI::Regenerate() {
 
     // delete currently displayed tickets
     scrollGridLayout->removeItem(spacer.get());
@@ -111,7 +124,7 @@ void DepartmentTicketsGUI::Refresh() {
 
     // create tickets
     for(int i = 0; i < tickets.size(); i++){
-        ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get(), userTickets));
+        ticketsGUI.push_back(std::make_unique<TicketGUI>(tickets[i], contents.get(), userTickets, !userTickets));
         scrollGridLayout->addWidget(ticketsGUI.back().get(), i, 0, 1, 1);
     }
 

@@ -12,6 +12,8 @@ public:
 
 private:
 
+    static std::string TimePointToString(std::chrono::time_point<std::chrono::system_clock> timePoint);
+
     std::unique_ptr<QGridLayout> gridLayout;
 
     std::unique_ptr<QLabel> sender;

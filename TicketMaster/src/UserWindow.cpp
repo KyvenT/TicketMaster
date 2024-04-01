@@ -55,12 +55,25 @@ UserWindow::UserWindow(const std::string &username) {
 }
 
 UserWindow::~UserWindow() {
+    gridLayout->removeItem(spacer.get());
+    for(const auto& dept : departmentsGUI){
+        scrollGridLayout->removeWidget(dept.get());
+    }
+    departmentsGUI.clear();
+
+    scrollGridLayout = nullptr;
     userWindow = nullptr;
 }
 
 void UserWindow::RefreshGUI() {
     for(auto& department : userWindow->departmentsGUI){
         department->Refresh();
+    }
+}
+
+void UserWindow::RegenerateGUI() {
+    for(auto& department : userWindow->departmentsGUI){
+        department->Regenerate();
     }
 }
 
@@ -124,7 +137,15 @@ void UserWindow::CreateTicket() {
     }
 
     ticketManager::CreateTicket(user->GetName(), departmentField->currentText().toStdString(), titleField->text().toStdString(), messageField->toPlainText().toStdString());
-    RefreshGUI();
+    RegenerateGUI();
     QMessageBox::information(this, "Success", "The ticket has been created successfully.",QMessageBox::Ok);
     popup->hide();
+
+    titleField->setText("");
+    departmentField->setCurrentIndex(0);
+    messageField->setText("");
+}
+
+std::string UserWindow::GetUsersName() {
+    return userWindow->user->GetName();
 }

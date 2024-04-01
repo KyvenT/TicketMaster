@@ -7,7 +7,9 @@
 #include <QComboBox>
 #include <QScrollArea>
 #include <QTextEdit>
+#include <iostream>
 #include "Ticket.h"
+#include "MessageGUI.h"
 
 /**
  * Ticket GUI displays information about a ticket, meant to be used in a list of other TicketGUIs, and provides more details when clicked on
@@ -22,7 +24,11 @@ public:
      * @param parent the parent widget the GUI should be attached to
      * @param showDepartment if the department section should be shown (this means its being accessed by the user)
      */
-    TicketGUI(Ticket* ticketData, QWidget* parent, bool showDepartment);
+    TicketGUI(Ticket* ticketData, QWidget* parent, bool showDepartment, bool isAdmin);
+
+    ~TicketGUI() override;
+
+    void RefreshTicketPopup();
 
 private:
 
@@ -32,15 +38,18 @@ private:
      */
     void CreateTicketPopup();
 
-    void RefreshTicketPopup();
-
     void ChangeDeptRep();
 
     void ChangeSeverity();
 
+    void ToggleResolved();
+
+    void SendMessage();
+
 
     Ticket* data; /// pointer to the ticket data to display
     bool showDepartment; /// if the department section should be shown (this means its being accessed by the user)
+    bool isAdmin;
 
     // button elements
     std::unique_ptr<QGridLayout> gridLayout; /// organizes the info within the ticket GUI
@@ -68,17 +77,14 @@ private:
     std::unique_ptr<QComboBox> popupSeverityAdmin = nullptr;
 
     // messages
-    // vector of message boxes <-- how???
+    std::vector<std::unique_ptr<MessageGUI>> messageGUIs;
+    std::unique_ptr<QSpacerItem> messageSpacer;
 
     // send message
     std::unique_ptr<QTextEdit> messageContents;
     std::unique_ptr<QPushButton> sendButton;
+    std::unique_ptr<QPushButton> resolvedButton;
 
-    // old
-    std::unique_ptr<QLabel> popupMessageLabel; /// displays the header for the ticket message in the popup
-    std::unique_ptr<QLabel> popupMessage; /// displays the message of the ticket in the popup
-    std::unique_ptr<QPushButton> markResolved; /// button to mark the ticket as resolved within popup
-    std::unique_ptr<QPushButton> passTicket; /// button to pass the ticket to the other party within popup
 
     std::map<TicketStatus, std::string> ticketStatusToString = {
             {TicketStatus::WaitingForDepartment, "Waiting For Department"},

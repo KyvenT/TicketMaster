@@ -5,7 +5,9 @@
 
 #include <utility>
 
-TicketGUI::TicketGUI(Ticket* ticketData, QWidget *parent, bool showDepartment) : QPushButton(parent), data(std::move(ticketData)), showDepartment(showDepartment) {
+TicketGUI::TicketGUI(Ticket* ticketData, QWidget *parent, bool showDepartment, bool isAdmin)
+: QPushButton(parent), data(std::move(ticketData)), showDepartment(showDepartment), isAdmin(isAdmin)
+{
 
     connect(this, &QPushButton::clicked, this, &TicketGUI::CreateTicketPopup);
 
@@ -28,23 +30,73 @@ TicketGUI::TicketGUI(Ticket* ticketData, QWidget *parent, bool showDepartment) :
     status->setFont(font);
 
     name->setText(data->getTitle().c_str());
-
-    if(data->getStatus() == TicketStatus::WaitingForUser)
-        status->setText("Waiting for User");
-    else if(data->getStatus() == TicketStatus::WaitingForDepartment)
-        status->setText("Waiting for Department");
-    else
-        status->setText("Resolved");
-
+    status->setText(ticketStatusToString[data->getStatus()].c_str());
     if(showDepartment)
         status->setText((data->getDepartment() + " | " + status->text().toStdString()).c_str());
+}
+
+TicketGUI::~TicketGUI() {
+    if(!popup)
+        return;
+
+    scrollGridLayout->removeItem(messageSpacer.get());
+    for(auto& message : messageGUIs){
+        scrollGridLayout->removeWidget(message.get());
+    }
+    messageGUIs.clear();
+
+    scrollGridLayout = nullptr;
+    scrollContents = nullptr;
+}
+
+void TicketGUI::RefreshTicketPopup() {
+
+    status->setText(ticketStatusToString[data->getStatus()].c_str());
+
+    if(!popup)
+        return;
+
+    // header
+    popupDepartment->setText(("Department: \t\t" + data->getDepartment()).c_str());
+    popupStatus->setText(("Status: \t\t\t" + ticketStatusToString[data->getStatus()]).c_str());
+
+    if(!isAdmin){
+        popupDepartmentRep->setText(("Department Rep: \t\t" + data->getDeptRep()).c_str());
+        popupSeverityUser->setText(("Severity: " + ticketSeverityToString[data->getSeverity()]).c_str());
+    }
+    else{
+        popupDepartmentRepAdmin->setCurrentText(data->getDeptRep().c_str());
+        popupSeverityAdmin->setCurrentIndex(data->getSeverity());
+    }
+
+    if(data->getStatus() == TicketStatus::Resolved) {
+        resolvedButton->setText("Mark Unresolved");
+    }
+    else {
+        resolvedButton->setText("Mark Resolved");
+    }
+
+    // delete messages
+    scrollGridLayout->removeItem(messageSpacer.get());
+    for(auto& message : messageGUIs){
+        scrollGridLayout->removeWidget(message.get());
+    }
+    messageGUIs.clear();
+
+    // create messages
+    std::vector<Message> messages = data->getMessages();
+    for(int i = 0; i < messages.size(); i++){
+        messageGUIs.push_back(std::make_unique<MessageGUI>(messages[i], scrollContents.get()));
+        scrollGridLayout->addWidget(messageGUIs.back().get(), i, 0, 1, 1);
+    }
+    scrollGridLayout->addItem(messageSpacer.get(), (int)messages.size(), 0, 1, 1);
 }
 
 void TicketGUI::CreateTicketPopup() {
     if(popup){
         popup->show();
         popup->resize(700, 600);
-        RefreshTicketPopup();
+        UserWindow::RefreshGUI();
         return;
     }
 
@@ -58,7 +110,7 @@ void TicketGUI::CreateTicketPopup() {
 
     // header
     popupHeader = std::make_unique<QWidget>(popup.get());
-    popupGridLayout->addWidget(popupHeader.get(), 0, 0, 1, 1);
+    popupGridLayout->addWidget(popupHeader.get(), 0, 0, 1, 2);
     headerGridLayout = std::make_unique<QGridLayout>(popupHeader.get());
     popupHeader->setSizePolicy(QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Fixed);
 
@@ -71,11 +123,12 @@ void TicketGUI::CreateTicketPopup() {
     font.setPointSize(18);
     popupTitle->setFont(font);
 
-    // header info
+    // user
     popupUser = std::make_unique<QLabel>(("User: \t\t\t" + data->getUser()).c_str(), popupHeader.get());
     headerGridLayout->addWidget(popupUser.get(), 1, 0, 1, 4);
 
-    if(showDepartment){
+    // department rep
+    if(!isAdmin){
         popupDepartmentRep = std::make_unique<QLabel>(("Department Rep: \t\t" + data->getDeptRep()).c_str(), popupHeader.get());
         headerGridLayout->addWidget(popupDepartmentRep.get(), 2, 0, 1, 4);
     }
@@ -96,13 +149,16 @@ void TicketGUI::CreateTicketPopup() {
         connect(popupDepartmentRepAdmin.get(), &QComboBox::currentTextChanged, this, &TicketGUI::ChangeDeptRep);
     }
 
+    // department
     popupDepartment = std::make_unique<QLabel>(("Department: \t\t" + data->getDepartment()).c_str(), popupHeader.get());
     headerGridLayout->addWidget(popupDepartment.get(), 3, 0, 1, 4);
 
+    // status
     popupStatus = std::make_unique<QLabel>(("Status: \t\t\t" + ticketStatusToString[data->getStatus()]).c_str(), popupHeader.get());
     headerGridLayout->addWidget(popupStatus.get(), 4, 0, 1, 2);
 
-    if(showDepartment){
+    // severity
+    if(!isAdmin){
         popupSeverityUser = std::make_unique<QLabel>(("Severity: " + ticketSeverityToString[data->getSeverity()]).c_str(), popupHeader.get());
         popupSeverityUser->setAlignment(Qt::AlignCenter);
         headerGridLayout->addWidget(popupSeverityUser.get(), 4, 2, 1, 2);
@@ -126,33 +182,79 @@ void TicketGUI::CreateTicketPopup() {
     // messages scroll area
     scrollArea = std::make_unique<QScrollArea>(popup.get());
     scrollArea->setWidgetResizable(true);
-    popupGridLayout->addWidget(scrollArea.get(), 1, 0, 1, 1);
+    popupGridLayout->addWidget(scrollArea.get(), 1, 0, 1, 2);
 
     scrollContents = std::make_unique<QWidget>();
     scrollArea->setWidget(scrollContents.get());
 
+    QPalette pal = scrollContents->palette();
+    pal.setColor(scrollContents->backgroundRole(), Qt::lightGray);
+    scrollContents->setPalette(pal);
+
     scrollGridLayout = std::make_unique<QGridLayout>(scrollContents.get());
-}
 
-void TicketGUI::RefreshTicketPopup() {
-    popupDepartment->setText(("Department: \t\t" + data->getDepartment()).c_str());
-    popupStatus->setText(("Status: \t\t\t" + ticketStatusToString[data->getStatus()]).c_str());
-
-    if(showDepartment){
-        popupDepartmentRep->setText(("Department Rep: \t\t" + data->getDeptRep()).c_str());
-        popupSeverityUser->setText(("Severity: " + ticketSeverityToString[data->getSeverity()]).c_str());
+    // messages
+    std::vector<Message> messages = data->getMessages();
+    for(int i = 0; i < messages.size(); i++){
+        messageGUIs.push_back(std::make_unique<MessageGUI>(messages[i], scrollContents.get()));
+        scrollGridLayout->addWidget(messageGUIs.back().get(), i, 0, 1, 1);
     }
-    else{
-        popupDepartmentRepAdmin->setCurrentText(data->getDeptRep().c_str());
-        popupSeverityAdmin->setCurrentIndex(data->getSeverity());
-    }
-}
 
-void TicketGUI::ChangeSeverity() {
-    data->setSeverity((TicketSeverity)popupSeverityAdmin->currentIndex());
+    messageSpacer = std::make_unique<QSpacerItem>(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    scrollGridLayout->addItem(messageSpacer.get(), (int)messages.size(), 0, 1, 1);
+
+    // add message to ticket
+    messageContents = std::make_unique<QTextEdit>(popup.get());
+    messageContents->setMaximumHeight(100);
+    messageContents->setPlaceholderText("Add Message");
+    popupGridLayout->addWidget(messageContents.get(), 2, 0, 1, 2);
+
+    sendButton = std::make_unique<QPushButton>("Send Message", popup.get());
+    popupGridLayout->addWidget(sendButton.get(), 3, 1, 1, 1);
+    connect(sendButton.get(), &QPushButton::clicked, this, &TicketGUI::SendMessage);
+
+    resolvedButton = std::make_unique<QPushButton>("Mark Resolved", popup.get());
+    popupGridLayout->addWidget(resolvedButton.get(), 3, 0, 1, 1);
+    if(data->getStatus() == TicketStatus::Resolved)
+        resolvedButton->setText("Mark Unresolved");
+    connect(resolvedButton.get(), &QPushButton::clicked, this, &TicketGUI::ToggleResolved);
 }
 
 void TicketGUI::ChangeDeptRep() {
     data->setDeptRep(popupDepartmentRepAdmin->currentText().toStdString());
+    UserWindow::RefreshGUI();
 }
 
+void TicketGUI::ChangeSeverity() {
+    data->setSeverity((TicketSeverity)popupSeverityAdmin->currentIndex());
+    UserWindow::RefreshGUI();
+}
+
+void TicketGUI::ToggleResolved() {
+    if(data->getStatus() != TicketStatus::Resolved){
+        data->setStatus(TicketStatus::Resolved);
+    }
+    else {
+        data->setStatus(TicketStatus::WaitingForDepartment);
+    }
+    UserWindow::RefreshGUI();
+}
+
+void TicketGUI::SendMessage() {
+    if(messageContents->toPlainText().isEmpty())
+        return;
+    if(data->getStatus() == TicketStatus::Resolved)
+        return;
+
+    data->addMessage(UserWindow::GetUsersName(), messageContents->toPlainText().toStdString());
+
+    if(data->getStatus() == TicketStatus::WaitingForDepartment){
+        data->setStatus(TicketStatus::WaitingForUser);
+    }
+    else{
+        data->setStatus(TicketStatus::WaitingForDepartment);
+    }
+
+    messageContents->setText("");
+    UserWindow::RefreshGUI();
+}

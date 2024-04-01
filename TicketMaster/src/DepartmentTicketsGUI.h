@@ -27,10 +27,17 @@ public:
      */
     DepartmentTicketsGUI(const std::string& sectionTitle, const std::string& userName, QWidget* parent);
 
+    ~DepartmentTicketsGUI() override;
+
     /**
-     * Reloads Tickets displayed for the Department/User
+     * Refreshes the data displayed in the Tickets, no tickets will be added or removed
      */
     void Refresh();
+
+    /**
+     * Regenerates the tickets being shows, tickets will be added and removed
+     */
+    void Regenerate();
 
 private:
 
