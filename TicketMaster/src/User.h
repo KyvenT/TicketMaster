@@ -86,8 +86,6 @@ public:
     /**
      * @brief Sets the user's password.
      *
-     * This method is used to update the user's password. The password should be
-     * hashed before being passed to this method.
      *
      * @param newPassword The new hashed password for the user.
      */
