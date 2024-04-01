@@ -6,6 +6,7 @@
 #include <QLabel>
 
 UserWindow* UserWindow::userWindow = nullptr;
+bool UserWindow::regenerateClaimedTickets = false;
 
 UserWindow::UserWindow(const std::string &username) {
 
@@ -87,10 +88,7 @@ void UserWindow::RegenerateGUI() {
 }
 
 void UserWindow::RegenerateClaimedTickets() {
-    if(userWindow->user->GetDepartments().empty())
-        return;
-
-    userWindow->departmentsGUI[1]->Regenerate();
+    regenerateClaimedTickets = true;
 }
 
 std::string UserWindow::GetUsersName() {
@@ -164,4 +162,14 @@ void UserWindow::CreateTicket() {
     titleField->setText("");
     departmentField->setCurrentIndex(0);
     messageField->setText("");
+}
+
+void UserWindow::mousePressEvent(QMouseEvent *event) {
+    if(regenerateClaimedTickets){
+        if(!userWindow->user->GetDepartments().empty())
+            userWindow->departmentsGUI[1]->Regenerate();
+        regenerateClaimedTickets = false;
+    }
+
+    QWidget::mousePressEvent(event);
 }

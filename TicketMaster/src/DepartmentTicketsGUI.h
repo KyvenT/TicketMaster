@@ -6,55 +6,64 @@
 #include "TicketGUI.h"
 
 /**
- * Department Tickets GUI displays all tickets in regards to a specific department (or user) as a list
+ * @brief Department Tickets GUI displays all tickets in regards to a specific department (or user) as a list
+ * @author Ryan Lambe
  */
 class DepartmentTicketsGUI : public QWidget {
 public:
+    /**
+     * @brief Default constructor should never be used
+     */
     DepartmentTicketsGUI() = delete;
 
     /**
-     * Constructor for the given department, Not for User section
-     * @param departmentName name of the department to include tickets for
-     * @param parent the parent widget the GUI should be attached to
+     * @brief Constructor for the given department, Not for User section
+     * @parameter departmentName name of the department to include tickets for
+     * @parameter parent the parent widget the GUI should be attached to
      */
     DepartmentTicketsGUI(const std::string& departmentName, QWidget* parent);
 
     /**
-     * Constructor for the given user, Not for Department section
-     * @param sectionTitle the title that should be displayed for the section
-     * @param userName the name of the user to display tickets for
-     * @param parent the parent widget the GUI should be attached to
+     * @brief Constructor for the given user, Not for Department section
+     * @parameter sectionTitle the title that should be displayed for the section
+     * @parameter userName the name of the user to display tickets for
+     * @parameter if claimed tickets, then it will show the tickets where the user is the rep of the ticket, and can access ticket as admin
+     * @parameter parent the parent widget the GUI should be attached to
      */
     DepartmentTicketsGUI(const std::string& sectionTitle, const std::string& userName, bool claimedTickets, QWidget* parent);
 
+    /**
+     * @brief Ensures Department Tickets GUI is cleaned up properly
+     */
     ~DepartmentTicketsGUI() override;
 
     /**
-     * Refreshes the data displayed in the Tickets, no tickets will be added or removed
+     * @brief Refreshes the data displayed in the Tickets, no tickets will be added or removed
      */
     void Refresh();
 
     /**
-     * Regenerates the tickets being shows, tickets will be added and removed
+     * @brief Regenerates the tickets being shows, tickets will be added and removed
      */
     void Regenerate();
 
 private:
 
     /**
-     * common setup process for both constructor
+     * @brief common setup process for both constructor
      */
     void Setup();
 
     /**
-     * change the way tickets are sorted
+     * @brief change the way tickets are sorted (called when sortType changed)
+     * @parameter the new value of the sorting order as a QString
      */
     void ChangeSortType(const QString& type);
 
 
     bool userTickets; /// if the tickets displayed are for the user or department
-    bool isAdmin;
-    bool claimedTickets;
+    bool isAdmin; /// if is admin then the user should be able to modify the ticket
+    bool claimedTickets; /// if claimed tickets then the tickets displayed should be ones where user is the department rep
     std::string ticketSearchTerm; /// the search term to be used when searching the Ticket Manager
     std::vector<std::unique_ptr<TicketGUI>> ticketsGUI; /// an array of the gui elements for each ticket
     std::string currentSortType; /// current method of sorting
