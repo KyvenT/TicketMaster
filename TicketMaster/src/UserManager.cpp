@@ -3,7 +3,7 @@
 #include <iterator>
 #include <set>
 #include <fstream>
-#include <functional>
+
 
 std::vector<std::shared_ptr<User>> UserManager::users = std::vector<std::shared_ptr<User>>();
 
@@ -114,6 +114,17 @@ void UserManager::LoadUsersFromFile(const std::string& filename) {
         }
         users.push_back(user);
     }
+}
+
+bool UserManager::VerifyUserPassword(const std::string& name, const std::string& password) {
+    auto it = std::find_if(users.begin(), users.end(), [&name](const std::shared_ptr<User>& user) {
+        return user->GetName() == name;
+    });
+
+    if (it != users.end()) {
+        return crypto_pwhash_str_verify((*it)->GetPassword().c_str(), password.c_str(), password.length()) == 0;
+    }
+    return false;
 }
 
 

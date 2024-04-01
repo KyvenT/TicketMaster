@@ -7,6 +7,7 @@
 #include <string>
 #include <set>
 #include <json/json.h>
+#include <sodium.h>
 
 /**
  * The UserManager class manages a collection of users.
@@ -42,6 +43,9 @@ public:
     static void SaveUsersToFile(const std::string& filename);
 
     static void LoadUsersFromFile(const std::string& filename);
+
+    // Static method for verifying a user's password
+    static bool VerifyUserPassword(const std::string& name, const std::string& password);
 
 private:
     static std::vector<std::shared_ptr<User>> users; // List of users

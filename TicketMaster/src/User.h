@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <sodium.h>
 
 /**
  * The User class represents a user in the system.

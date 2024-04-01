@@ -39,6 +39,12 @@ std::string User::GetPassword() const {
 }
 
 void User::SetPassword(const std::string& newPassword) {
-    password = newPassword;
+    char hashed_password[crypto_pwhash_STRBYTES];
+    if (crypto_pwhash_str(hashed_password, newPassword.c_str(), newPassword.length(),
+                          crypto_pwhash_OPSLIMIT_INTERACTIVE, crypto_pwhash_MEMLIMIT_INTERACTIVE) != 0) {
+
+        throw std::runtime_error("Password hashing failed.");
+    }
+    password = hashed_password;
 }
 
