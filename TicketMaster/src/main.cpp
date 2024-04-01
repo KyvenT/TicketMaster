@@ -6,6 +6,12 @@
 
 int main(int argc, char *argv[ ])
 {
+
+    if (sodium_init() == -1) {
+        // Handle initialization failure
+        return 1;
+    }
+
     QApplication app(argc, argv);
 
     UserManager::CreateUser("test", "password");

@@ -39,4 +39,6 @@ add_executable(TicketMaster src/main.cpp
 
 target_link_libraries(TicketMaster Qt5::Widgets)
 target_link_libraries(TicketMaster jsoncpp_lib)
+target_link_libraries(TicketMaster sodium)
 target_include_directories(TicketMaster PRIVATE ${CMAKE_SOURCE_DIR}/thirdParty/jsoncpp/include)
+target_include_directories(TicketMaster PRIVATE ${CMAKE_SOURCE_DIR}/thirdParty/libsodium/libsodium/src/libsodium/include)

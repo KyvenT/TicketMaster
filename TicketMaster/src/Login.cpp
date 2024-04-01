@@ -1,5 +1,6 @@
 #include "Login.h"
 #include "UserManager.h"
+#include "AdminWindow.h"
 
 Login::Login(QWidget *parent) : QWidget(parent) {
     nameLabel = new QLabel("Name:", this);
@@ -27,6 +28,13 @@ void Login::handleLogin() {
     QString enteredName = nameEdit->text();
     QString enteredPassword = passwordEdit->text();
 
+    if (enteredName.toStdString() == "admin" && enteredPassword.toStdString() == "admin") {
+        adminWindow = std::make_unique<AdminWindow>();
+        hide();
+        return;
+    }
+
+    // Not an admin or username not found, proceed with normal user logic
     // Use UserManager to verify the user
     std::shared_ptr<User> user = UserManager::GetUser(enteredName.toStdString());
     if (user != nullptr && user->GetPassword() == enteredPassword.toStdString()) {

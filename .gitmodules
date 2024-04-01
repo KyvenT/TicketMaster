@@ -1,3 +1,6 @@
 [submodule "TicketMaster/thirdParty/jsoncpp"]
 	path = TicketMaster/thirdParty/jsoncpp
 	url = https://github.com/open-source-parsers/jsoncpp.git
+[submodule "TicketMaster/thirdParty/libsodium"]
+	path = TicketMaster/thirdParty/libsodium
+	url = https://github.com/robinlinden/libsodium-cmake.git
