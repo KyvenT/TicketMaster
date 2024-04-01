@@ -3,6 +3,7 @@
 #include <QWidget>
 #include <QGridLayout>
 #include <QLabel>
+#include <memory>
 #include "Ticket.h"
 
 class MessageGUI : public QWidget {
