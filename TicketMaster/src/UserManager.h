@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 #include <set>
+#include <json/json.h>
 
 /**
  * The UserManager class manages a collection of users.
@@ -37,6 +38,10 @@ public:
     static std::shared_ptr<User> GetUser(const std::string& name);
 
     static std::vector<std::shared_ptr<User>> GetUsersInDepartment(const std::string& department);
+  
+    static void SaveUsersToFile(const std::string& filename);
+
+    static void LoadUsersFromFile(const std::string& filename);
 
 private:
     static std::vector<std::shared_ptr<User>> users; // List of users
