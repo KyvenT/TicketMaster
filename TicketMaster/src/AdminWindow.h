@@ -14,7 +14,6 @@
 #include <QMessageBox>
 #include <QComboBox>
 #include "UserManager.h"
-#include "MultiSelectComboBox.h"
 
 class AdminWindow : public QWidget {
     Q_OBJECT
@@ -44,7 +43,7 @@ private:
     QLineEdit *passwordLineEdit;
     QHBoxLayout *departmentLayout;
     QLabel *departmentLabel;
-    MultiSelectComboBox *departmentComboBox;
+    QComboBox *departmentComboBox;
     QPushButton *usersAddButton;
     QScrollArea *usersScrollArea;
     QHBoxLayout *departmentsLabelLayout;

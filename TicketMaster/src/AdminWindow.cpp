@@ -34,13 +34,14 @@ AdminWindow::AdminWindow(QWidget *parent) : QWidget(parent) {
     //department input
     QHBoxLayout *departmentLayout = new QHBoxLayout;
     QLabel *departmentLabel = new QLabel("Department:");
-    departmentComboBox = new MultiSelectComboBox;
+    departmentComboBox = new QComboBox;
     departmentComboBox->setFixedWidth(400);
     populateDepartmentsComboBox();
     departmentLayout->addWidget(departmentLabel);
     departmentLayout->addWidget(departmentComboBox);
     mainLayout->addLayout(departmentLayout);
 
+    //add button for users
     usersAddButton = new QPushButton("Add");
     usersAddButton->setFixedWidth(100);
     QHBoxLayout *addButtonLayout = new QHBoxLayout;
@@ -48,6 +49,7 @@ AdminWindow::AdminWindow(QWidget *parent) : QWidget(parent) {
     addButtonLayout->addWidget(usersAddButton);
     mainLayout->addLayout(addButtonLayout);
 
+    //user list area
     usersScrollArea = new QScrollArea;
     usersScrollArea->setWidgetResizable(true);
     usersScrollArea->setStyleSheet("background-color: #FFFFFF;");
@@ -59,16 +61,19 @@ AdminWindow::AdminWindow(QWidget *parent) : QWidget(parent) {
     departmentsLabelLayout->addWidget(departmentsLabel);
     departmentsLabelLayout->setAlignment(Qt::AlignRight);
 
+    //line to enter department name
     departmentsLineEdit = new QLineEdit;
     departmentsLineEdit->setFixedWidth(400);
     departmentsLabelLayout->addWidget(departmentsLineEdit);
 
+    //department add button
     departmentsAddButton = new QPushButton("Add");
     departmentsAddButton->setFixedWidth(100);
     departmentsLabelLayout->addWidget(departmentsAddButton);
 
     mainLayout->addLayout(departmentsLabelLayout);
 
+    //department list area
     departmentsScrollArea = new QScrollArea;
     departmentsScrollArea->setWidgetResizable(true);
     departmentsScrollArea->setStyleSheet("background-color: #FFFFFF;");
@@ -85,10 +90,10 @@ AdminWindow::AdminWindow(QWidget *parent) : QWidget(parent) {
     usersScrollArea->setWidget(usersListWidget);
     
     departmentNames = QSet<QString>();
-    populateUsersScrollArea();
-    connect(usersAddButton, &QPushButton::clicked, this, &AdminWindow::addUser);
-    populateDepartmentsScrollArea();
-    connect(departmentsAddButton, &QPushButton::clicked, this, &AdminWindow::addDepartment);
+    populateUsersScrollArea(); //get existing users and add to list area
+    connect(usersAddButton, &QPushButton::clicked, this, &AdminWindow::addUser); //connect user add button to function
+    populateDepartmentsScrollArea(); //get existing departments and add to list area
+    connect(departmentsAddButton, &QPushButton::clicked, this, &AdminWindow::addDepartment); //connect department add button to function
 
     this->show();
 }
@@ -102,6 +107,7 @@ void AdminWindow::populateUsersScrollArea() {
     }
 }
 
+//creates the user widget in user list section
 void AdminWindow::addUserWidget(const std::shared_ptr<User>& user) {
     QLabel *usernameLabel = new QLabel(QString::fromStdString(user->GetName()));
     QLabel *departmentLabel = new QLabel(QString::fromStdString(user->GetDepartments().front()));
@@ -121,6 +127,7 @@ void AdminWindow::addUserWidget(const std::shared_ptr<User>& user) {
     });
 }
 
+//adds new user to list area and in UserManager
 void AdminWindow::addUser() {
     QString username = usernameLineEdit->text();
     QString password = passwordLineEdit->text();
@@ -150,6 +157,7 @@ void AdminWindow::addUser() {
     }
 }
 
+//removes user 
 void AdminWindow::deleteUser(QWidget *userWidget, const QString &username) {
     QLayout *layout = usersListLayout->layout();
     if (layout) {
@@ -161,6 +169,7 @@ void AdminWindow::deleteUser(QWidget *userWidget, const QString &username) {
     }
 }
 
+//fills department combobox with list of existing departments
 void AdminWindow::populateDepartmentsComboBox() {
     //clear existing items in combo box
     departmentComboBox->clear();
@@ -182,6 +191,7 @@ void AdminWindow::populateDepartmentsScrollArea() {
     }
 }
 
+//creates department widget to add to department list area
 void AdminWindow::addDepartmentWidget(const QString& departmentName) {
     if (!departmentNames.contains(departmentName)) {
         QPushButton *deleteButton = new QPushButton("Delete");
@@ -202,6 +212,7 @@ void AdminWindow::addDepartmentWidget(const QString& departmentName) {
     }
 }
 
+//adds department to the list area and in UserManager
 void AdminWindow::addDepartment() {
     QString departmentName = departmentsLineEdit->text();
     if (!departmentName.isEmpty()) {
@@ -233,7 +244,8 @@ void AdminWindow::addDepartment() {
         }
     }
 }
-
+ 
+//removes department
 void AdminWindow::deleteDepartment(QWidget *departmentWidget, const QString &departmentName) {
     //check if there are users assigned to the department
     std::vector<std::shared_ptr<User>> usersInDepartment = UserManager::GetUsersInDepartment(departmentName.toStdString());
