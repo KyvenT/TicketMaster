@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <iterator>
 #include <set>
+#include <fstream>
+#include <functional>
 
 std::vector<std::shared_ptr<User>> UserManager::users = std::vector<std::shared_ptr<User>>();
 
@@ -79,6 +81,39 @@ std::vector<std::shared_ptr<User>> UserManager::GetUsersInDepartment(const std::
         }
     }
     return usersInDepartment;
+}
+
+void UserManager::SaveUsersToFile(const std::string& filename) {
+    Json::Value root;
+    for (const auto& user : users) {
+        Json::Value userJson;
+        userJson["name"] = user->GetName();
+        userJson["password"] = user->GetPassword();
+        for (const auto& dept : user->GetDepartments()) {
+            userJson["departments"].append(dept);
+        }
+        root.append(userJson);
+    }
+
+    std::ofstream file(filename);
+    file << root;
+}
+
+void UserManager::LoadUsersFromFile(const std::string& filename) {
+    Json::Value root;
+    std::ifstream file(filename);
+    file >> root;
+
+    users.clear(); // Clear the existing users
+
+    for (const auto& userJson : root) {
+        auto user = std::make_shared<User>(userJson["name"].asString(),
+                                           userJson["password"].asString());
+        for (const auto& dept : userJson["departments"]) {
+            user->AddDepartment(dept.asString());
+        }
+        users.push_back(user);
+    }
 }
 
 
