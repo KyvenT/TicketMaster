@@ -55,6 +55,7 @@ void ticketManager::SaveTickets() {
     Json::Value ticketsVec;
     Json::StyledWriter writer;
     for (int i = 0; i < tickets.size(); i++) {
+        // convert time_point to string
         std::time_t modifiedTime = std::chrono::system_clock::to_time_t(tickets[i].getModifiedTime());
         std::tm modifTime = *std::localtime(&modifiedTime);
         char buffer[50];
@@ -62,6 +63,7 @@ void ticketManager::SaveTickets() {
             std::cout << "strftime failed" << std::endl;
         }
 
+        // convert messages vector to Json::Value vector
         Json::Value messageVec;
         for (int j = 0; j < tickets[i].getMessages().size(); j++) {
             Json::Value message;
@@ -70,6 +72,7 @@ void ticketManager::SaveTickets() {
             messageVec.append(message);
         }
 
+        // store info
         Json::Value ticketJson;
         ticketJson["title"] = tickets[i].getTitle();
         ticketJson["user"] = tickets[i].getUser();
@@ -84,10 +87,12 @@ void ticketManager::SaveTickets() {
     Json::Value root;
     root["tickets"] = ticketsVec;
     file << writer.write(root);
+    // close file
     file.close();
 }
 
 void ticketManager::ReadTickets() {
+    // open tickets.json, initialize reader
     std::ifstream ticketFile("tickets.json");
     Json::Reader reader;
     Json::Value readTicket;
@@ -95,6 +100,7 @@ void ticketManager::ReadTickets() {
     Json::Value ticketsJson = readTicket;
 
     for (int i = 0; i < ticketsJson["tickets"].size(); i++) {
+        // Convert string of time to time_point
         std::tm tm;
         std::string modifTime = ticketsJson["tickets"][i]["modifiedTime"].asString();
         std::stringstream stringStream(modifTime);
@@ -111,6 +117,7 @@ void ticketManager::ReadTickets() {
             messagesVec.push_back(tempMessage);
         }
 
+        // add values to ticket
         std::string title = ticketsJson["tickets"][i]["title"].asString();
         std::string user = ticketsJson["tickets"][i]["user"].asString();
         int severity = ticketsJson["tickets"][i]["severity"].asInt();
@@ -121,6 +128,6 @@ void ticketManager::ReadTickets() {
 
         tickets.push_back(tempTicket);
     }
-
+    // close file
     ticketFile.close();
 }

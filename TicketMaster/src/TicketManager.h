@@ -1,10 +1,9 @@
 /**
- * @brief
- * Static class to organize and manipulate the individual tickets by storing them into a vector
- * Reads created tickets from "tickets.json" at beginning of program
- * and writes saved tickets to "tickets.json" after window close
- * Returns tickets according to a given user or department or department representative
- * Also creates and deletes tickets
+ * @brief Static class to organize and manipulate the individual tickets
+ *
+ * ticketManager stores tickets into a vector, reads created tickets from "tickets.json" at beginning of program
+ * and writes saved tickets to "tickets.json" after window close, returns tickets according to a given user or
+ * department or department representative, and creates and deletes tickets
  *
  * @author Kyven
  */
@@ -26,35 +25,30 @@ class ticketManager {
         static std::vector<Ticket> tickets;
     public:
         /**
-         * @brief
-         * Default constructor
+         * @brief Default constructor
          */
         explicit ticketManager();
         /**
-         * @brief
-         * Function to get tickets created by specified user
+         * @brief Function to get tickets created by specified user
          * @param user user who created the tickets
          * @return std::vector<ticket> of tickets created by user
          */
         static std::vector<Ticket*> GetUserTickets(const std::string& user);
         /**
-         * @brief
-         * Function to get tickets sent to specified department
+         * @brief Function to get tickets sent to specified department
          * @param department destination department of tickets
          * @return std::vector<ticket> of tickets associated with department
          */
         static std::vector<Ticket*> GetDeptTickets(const std::string& department);
         /**
-        * @brief
-        * Function to get tickets sent to a department, and then claimed by the user
+        * @brief Function to get tickets sent to a department, and then claimed by the user
         * @param user user who claimed the tickets
         * @return std::vector<ticket> of tickets claimed by department representative
         */
         static std::vector<Ticket*> GetUserClaimedTickets(const std::string& user);
 
         /**
-         * @brief
-         * Function to create a new ticket given user who created it, destination department, title of ticket, and initial ticket message
+         * @brief Function to create a new ticket given user who created it, destination department, title of ticket, and initial ticket message
          * @param user user who created ticket
          * @param department destination department of ticket
          * @param title title of ticket
@@ -63,8 +57,7 @@ class ticketManager {
         static void CreateTicket(std::string user, std::string department, std::string title, std::string message);
 
         /**
-         * @brief
-         * Function to delete a certain ticket, given the creator user, destination department, and ticket title
+         * @brief Function to delete a certain ticket, given the creator user, destination department, and ticket title
          * @param user user who created the ticket
          * @param department destination department of the ticket
          * @param title title of the ticket
@@ -72,14 +65,12 @@ class ticketManager {
         static void DeleteTicket(std::string user, std::string department, std::string title);
 
         /**
-         * @brief
-         * Function to save tickets vector into a tickets.json file
+         * @brief Function to save tickets vector into a tickets.json file
          */
         static void SaveTickets();
 
         /**
-         * @brief
-         * Function to read a tickets.json file containing tickets into the tickets vector
+         * @brief Function to read a tickets.json file containing tickets into the tickets vector
          */
         static void ReadTickets();
 };
