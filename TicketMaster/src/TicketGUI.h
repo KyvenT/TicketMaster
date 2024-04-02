@@ -25,10 +25,10 @@ public:
 
     /**
      * @brief creates a single Ticket GUI
-     * @parameter ticketData pointer to the data to be shown within the ticket
-     * @parameter parent the parent widget the GUI should be attached to
-     * @parameter showDepartment if the department section should be shown (this means its being accessed by the user)
-     * @parameter isAdmin if the user should have access to modify the tickets within this section
+     * @param ticketData pointer to the data to be shown within the ticket
+     * @param parent the parent widget the GUI should be attached to
+     * @param showDepartment if the department section should be shown (this means its being accessed by the user)
+     * @param isAdmin if the user should have access to modify the tickets within this section
      */
     TicketGUI(Ticket* ticketData, QWidget* parent, bool showDepartment, bool isAdmin);
 
@@ -70,55 +70,93 @@ private:
     void SendMessage();
 
 
-    Ticket* data; /// pointer to the ticket data to display
-    bool showDepartment; /// if the department section should be shown (this means its being accessed by the user)
-    bool isAdmin; /// if the ticket should be able to be modified by the user when the popup is opened
+    /// pointer to the ticket data to display
+    Ticket* data;
+    /// if the department section should be shown (this means its being accessed by the user)
+    bool showDepartment;
+    /// if the ticket should be able to be modified by the user when the popup is opened
+    bool isAdmin;
 
-    // button elements
-    std::unique_ptr<QGridLayout> gridLayout; /// organizes the info within the ticket GUI
-    std::unique_ptr<QLabel> name; /// displays the name of the ticket within the ticket GUI
-    std::unique_ptr<QLabel> status; /// displays the status (and optionally the department) of the ticket within the ticket GUI
+    /*
+     * Button Elements
+     */
+    /// organizes the info within the ticket GUI
+    std::unique_ptr<QGridLayout> gridLayout;
+    /// displays the name of the ticket within the ticket GUI
+    std::unique_ptr<QLabel> name;
+    /// displays the status (and optionally the department) of the ticket within the ticket GUI
+    std::unique_ptr<QLabel> status;
 
-    // popup elements
-    std::unique_ptr<QWidget> popup = nullptr; /// popup to access the ticket data
-    std::unique_ptr<QWidget> popupHeader; /// header section of the popup
-    std::unique_ptr<QWidget> scrollContents; /// the contents of the scroll area, contains the messages that have been sent
-    std::unique_ptr<QScrollArea> scrollArea; /// the scroll area allowing more messages than would normally fit on the window to be seen
+    /*
+     * Popup Elements
+     */
+    /// popup to access the ticket data
+    std::unique_ptr<QWidget> popup = nullptr;
+    /// header section of the popup
+    std::unique_ptr<QWidget> popupHeader;
+    /// the contents of the scroll area, contains the messages that have been sent
+    std::unique_ptr<QWidget> scrollContents;
+    /// the scroll area allowing more messages than would normally fit on the window to be seen
+    std::unique_ptr<QScrollArea> scrollArea;
 
-    std::unique_ptr<QGridLayout> popupGridLayout; /// organizes all the ticket data in the popup
-    std::unique_ptr<QGridLayout> headerGridLayout; /// organizes all the header information
-    std::unique_ptr<QGridLayout> scrollGridLayout; /// organizes all the messages to be one after the other
+    /// organizes all the ticket data in the popup
+    std::unique_ptr<QGridLayout> popupGridLayout;
+    /// organizes all the header information
+    std::unique_ptr<QGridLayout> headerGridLayout;
+    /// organizes all the messages to be one after the other
+    std::unique_ptr<QGridLayout> scrollGridLayout;
 
-    // popup header
-    std::unique_ptr<QLabel> popupTitle; /// displays the name of the ticket in the popup
-    std::unique_ptr<QLabel> popupUser; /// displays the user that created the ticket
-    std::unique_ptr<QLabel> popupDepartmentRep; /// displays the user within the department that claimed the ticket
-    std::unique_ptr<QLabel> popupDepartment; /// displays the department of the ticket in the popup
-    std::unique_ptr<QLabel> popupStatus; /// displays the status of the ticket
-    std::unique_ptr<QLabel> popupSeverityUser; /// displays the severity of the ticket
-    std::unique_ptr<QComboBox> popupDepartmentRepAdmin = nullptr; /// allows department rep to be changed, only shown when isAdmin == true
-    std::unique_ptr<QComboBox> popupSeverityAdmin = nullptr; /// allows ticket severity to be changed, only shown when isAdmin == true
+    /*
+     * Popup Header
+     */
+    /// displays the name of the ticket in the popup
+    std::unique_ptr<QLabel> popupTitle;
+    /// displays the user that created the ticket
+    std::unique_ptr<QLabel> popupUser;
+    /// displays the user within the department that claimed the ticket
+    std::unique_ptr<QLabel> popupDepartmentRep;
+    /// displays the department of the ticket in the popup
+    std::unique_ptr<QLabel> popupDepartment;
+    /// displays the status of the ticket
+    std::unique_ptr<QLabel> popupStatus;
+    /// displays the severity of the ticket
+    std::unique_ptr<QLabel> popupSeverityUser;
+    /// allows department rep to be changed, only shown when isAdmin == true
+    std::unique_ptr<QComboBox> popupDepartmentRepAdmin = nullptr;
+    /// allows ticket severity to be changed, only shown when isAdmin == true
+    std::unique_ptr<QComboBox> popupSeverityAdmin = nullptr;
 
-    // messages
-    std::vector<std::unique_ptr<MessageGUI>> messageGUIs; /// all the message GUIs that are displayed
-    std::unique_ptr<QSpacerItem> messageSpacer; /// spacer to keep all the message Guis at the top of the area
+    /*
+     * Messages
+     */
+    /// all the message GUIs that are displayed
+    std::vector<std::unique_ptr<MessageGUI>> messageGUIs;
+    /// spacer to keep all the message Guis at the top of the area
+    std::unique_ptr<QSpacerItem> messageSpacer;
 
-    // send message
-    std::unique_ptr<QTextEdit> messageContents; /// area for new message to be typed before it is sent
-    std::unique_ptr<QPushButton> sendButton; /// button to send the message created in messageContents to the ticket
-    std::unique_ptr<QPushButton> resolvedButton; /// allows ticket to be marked as resolved by either the user or the admin, if already resolved it will unresolve it
+    /*
+     * Send Message
+     */
+    /// area for new message to be typed before it is sent
+    std::unique_ptr<QTextEdit> messageContents;
+    /// button to send the message created in messageContents to the ticket
+    std::unique_ptr<QPushButton> sendButton;
+    /// allows ticket to be marked as resolved by either the user or the admin, if already resolved it will unresolve it
+    std::unique_ptr<QPushButton> resolvedButton;
 
 
+    /// map to convert TicketStatus values to their names as a string
     std::map<TicketStatus, std::string> ticketStatusToString = {
             {TicketStatus::WaitingForDepartment, "Waiting For Department"},
             {TicketStatus::WaitingForUser, "Waiting For User"},
             {TicketStatus::Resolved, "Resolved"}
-    }; /// map to convert TicketStatus values to their names as a string
+    };
 
+    /// map to convert TicketSeverity values to their names as a string
     std::map<TicketSeverity, std::string> ticketSeverityToString = {
             {TicketSeverity::Mild, "Mild"},
             {TicketSeverity::Moderate, "Moderate"},
             {TicketSeverity::Urgent, "Urgent"},
             {TicketSeverity::Unknown, "Unknown"}
-    }; /// map to convert TicketSeverity values to their names as a string
+    };
 };
