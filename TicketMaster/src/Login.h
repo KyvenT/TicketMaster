@@ -20,7 +20,7 @@ class Login : public QWidget {
 public:
     /**
      * @brief Constructor method for the login class
-     * @parameter parent
+     * @param parent
      */
     explicit Login(QWidget *parent = nullptr);
 
