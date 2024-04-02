@@ -6,23 +6,22 @@
 
 int main(int argc, char *argv[ ])
 {
-
+    // setup
     if (sodium_init() == -1) {
         // Handle initialization failure
         return 1;
     }
 
     QApplication app(argc, argv);
-
-    UserManager::CreateUser("test", "password");
-    UserManager::AddUserToDepartment("test", "Admin");
-    UserManager::AddUserToDepartment("test", "Information Technology");
-
     ticketManager::ReadTickets();
+    UserManager::LoadUsersFromFile("users.json");
 
+    //run
     Login login(nullptr);
-    //AdminWindow adminWindow;
+    int exitCode = app.exec();
 
-    return app.exec();
+    // exit
+    UserManager::SaveUsersToFile("users.json");
+    return exitCode;
 
 }
