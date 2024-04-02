@@ -185,7 +185,7 @@ class Ticket {
         /// Ticket destination department
         std::string department;
 
-        /// Assigned department representatitive
+        /// Assigned department representative
         std::string deptRep;
 
         /// Messages in ticket
