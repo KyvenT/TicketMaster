@@ -81,28 +81,73 @@ private slots:
     void addUser();
 
 private:
+    // main layout of the gui
     QVBoxLayout *mainLayout;
+
+    // layout for the user label
     QHBoxLayout *usersLabelLayout;
+
+    // user label
     QLabel *usersLabel;
+
+    // layout for username
     QHBoxLayout *usernameLayout;
+    
+    // label for username
     QLabel *usernameLabel;
+
+    // line edit area for username
     QLineEdit *usernameLineEdit;
+
+    // layout for password
     QHBoxLayout *passwordLayout;
+
+    // label for password
     QLabel *passwordLabel;
+
+    // line edit area for password
     QLineEdit *passwordLineEdit;
+
+    // layout for department
     QHBoxLayout *departmentLayout;
+
+    // label for department
     QLabel *departmentLabel;
+
+    // combobox for departments
     QComboBox *departmentComboBox;
+
+    // button to add users
     QPushButton *usersAddButton;
+    
+    // scroll area to show all users
     QScrollArea *usersScrollArea;
+
+    // label layout for departments
     QHBoxLayout *departmentsLabelLayout;
+
+    // department label
     QLabel *departmentsLabel;
+
+    // line edit for departments
     QLineEdit *departmentsLineEdit;
+
+    // button to add departments
     QPushButton *departmentsAddButton;
+
+    // scroll area to show list of departments
     QScrollArea *departmentsScrollArea;
+
+    // layout for the departments list
     QVBoxLayout *departmentsListLayout;
+
+    // list of department names
     QSet<QString> departmentNames;
+
+    // layout for users list
     QVBoxLayout *usersListLayout;
+
+    // vector of department names
     std::vector<std::string> departmentNamesVector;
 };
 
