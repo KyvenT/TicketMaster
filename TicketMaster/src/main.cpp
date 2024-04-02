@@ -13,8 +13,8 @@ int main(int argc, char *argv[ ])
     }
 
     QApplication app(argc, argv);
-    ticketManager::ReadTickets();
     UserManager::LoadUsersFromFile("users.json");
+    ticketManager::ReadTickets();
 
     //run
     Login login(nullptr);

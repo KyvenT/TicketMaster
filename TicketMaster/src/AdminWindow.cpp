@@ -109,8 +109,14 @@ void AdminWindow::populateUsersScrollArea() {
 
 // creates the user widget in user list section
 void AdminWindow::addUserWidget(const std::shared_ptr<User>& user) {
+    auto departments = user->GetDepartments();
+    std::string departmentName = "None";
+    if(!departments.empty()){
+        departmentName = departments.front();
+    }
+
     QLabel *usernameLabel = new QLabel(QString::fromStdString(user->GetName()));
-    QLabel *departmentLabel = new QLabel(QString::fromStdString(user->GetDepartments().front()));
+    QLabel *departmentLabel = new QLabel(departmentName.c_str());
     QPushButton *deleteButton = new QPushButton("Delete");
     deleteButton->setFixedSize(100, 20);
 
@@ -133,14 +139,17 @@ void AdminWindow::addUser() {
     QString password = passwordLineEdit->text();
     QString department = departmentComboBox->currentText();
 
-    if (!username.isEmpty() && !password.isEmpty() && !department.isEmpty()) {
+    if (!username.isEmpty() && !password.isEmpty()) {
         // check if the username already exists
         if (UserManager::GetUser(username.toStdString()) == nullptr) {
             // creating user
             std::shared_ptr<User> newUser = UserManager::CreateUser(username.toStdString(), password.toStdString());
             if (newUser) {
                 // add the user to the selected department
-                UserManager::AddUserToDepartment(username.toStdString(), department.toStdString());
+                if(departmentComboBox->currentIndex() != 0){
+                    UserManager::AddUserToDepartment(username.toStdString(), department.toStdString());
+                }
+
                 // add the user to the UI
                 addUserWidget(newUser);
                 // clear input fields
@@ -175,6 +184,7 @@ void AdminWindow::populateDepartmentsComboBox() {
     departmentComboBox->clear();
 
     // populate combo box with existing departments from departmentNamesVector
+    departmentComboBox->addItem("None");
     for (const std::string& department : departmentNamesVector) {
         departmentComboBox->addItem(QString::fromStdString(department));
     }
