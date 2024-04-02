@@ -95,7 +95,7 @@ void DepartmentTicketsGUI::Setup() {
 
 void DepartmentTicketsGUI::Refresh() {
     for(auto& ticket : ticketsGUI){
-        ticket->RefreshTicketPopup();
+        ticket->RefreshTicket();
     }
 }
 

@@ -49,7 +49,7 @@ TicketGUI::~TicketGUI() {
     scrollContents = nullptr;
 }
 
-void TicketGUI::RefreshTicketPopup() {
+void TicketGUI::RefreshTicket() {
 
     status->setText((ticketSeverityToString[data->getSeverity()] + " | " + ticketStatusToString[data->getStatus()]).c_str());
     if(showDepartment)
@@ -225,7 +225,7 @@ void TicketGUI::CreateTicketPopup() {
 void TicketGUI::ChangeDeptRep() {
     data->setDeptRep(popupDepartmentRepAdmin->currentText().toStdString());
 
-    //UserWindow::RefreshGUI();
+    UserWindow::RefreshGUI();
     UserWindow::RegenerateClaimedTickets();
 }
 
