@@ -1,12 +1,4 @@
-/**
- * @brief Class to store information about an individual ticket
- *
- * Each ticket stores title, user (who created the ticket), ticket severity, ticket status,
- * the department the ticket was sent to, the messages in the discussion of each ticket,
- * the last modified time of the ticket, and the assigned department representative user
- *
- * @author Kyven
- */
+
 #pragma once
 
 #include <string>
@@ -41,7 +33,9 @@ struct Message {
     Message(const std::string& message, const std::string& sender) : message(message), sender(sender) {}
 };
 
-/** Ticket class holds all data needed for each ticket
+/**
+ * @brief Class to store information about an individual ticket
+ * @author Kyven
  */
 class Ticket {
     public:
