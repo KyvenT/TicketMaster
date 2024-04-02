@@ -34,7 +34,7 @@ void Login::handleLogin() {
         return;
     }
 
-    // Not an admin or username not found, proceed with normal user logic
+    // Not an admin, proceed with normal user logic
     // Use UserManager to verify the user
     std::shared_ptr<User> user = UserManager::GetUser(enteredName.toStdString());
     if (user != nullptr && user->GetPassword() == enteredPassword.toStdString()) {

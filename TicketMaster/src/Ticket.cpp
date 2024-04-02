@@ -112,13 +112,3 @@ Ticket::Ticket(std::string title, std::string user, std::vector<Message> message
         this->hasDeptRep = true;
     }
 }
-
-
-
-
-
-
-
-
-
-
