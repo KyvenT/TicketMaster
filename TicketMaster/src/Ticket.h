@@ -180,13 +180,12 @@ class Ticket {
         std::string title;
 
         /// Ticket creator user
-        // weak_ptr<User> user;
         std::string user;
 
         /// Ticket destination department
         std::string department;
 
-        /// Assigned department representatitive
+        /// Assigned department representative
         std::string deptRep;
 
         /// Messages in ticket
